@@ -16,7 +16,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            cd ~/atividade2-crud-anna.alves || cd /home/${{ secrets.SERVER_USER }}/atividade2-crud-anna.alves
+            echo "${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}" | cd ~/atividade2-crud-anna.alves || cd /home/${{ secrets.SERVER_USER }}/atividade2-crud-anna.alves
             git checkout main
             git pull
             docker compose down
