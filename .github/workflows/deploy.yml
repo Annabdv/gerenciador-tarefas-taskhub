@@ -9,9 +9,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
-
       - name: Executar Deploy via SSH no servidor
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -19,8 +16,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            cd /caminho/para/o/projeto/atividade2-crud-anna.alves
+            cd ~/atividade2-crud-anna.alves || cd /home/${{ secrets.SERVER_USER }}/atividade2-crud-anna.alves
             git checkout main
-            git pull origin main
+            git pull
             docker compose down
             docker compose up --build -d
