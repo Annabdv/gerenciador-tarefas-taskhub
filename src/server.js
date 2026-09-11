@@ -1,9 +1,11 @@
 const express = require('express');
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET || 'chave_secreta_para_desenvolvimento';
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL || 'postgres://postgres:postgres@localhost:5432/gerenciador_tarefas',
@@ -14,14 +16,6 @@ app.use(express.json());
 // Função de inicialização do banco de dados para criar as tabelas
 async function initDb(retries = 5, delay = 2000) {
   const queryText = `
-    CREATE TABLE IF NOT EXISTS tarefas (
-      id SERIAL PRIMARY KEY,
-      titulo VARCHAR(255) NOT NULL,
-      descricao TEXT,
-      concluida BOOLEAN DEFAULT FALSE,
-      criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-
     CREATE TABLE IF NOT EXISTS usuarios (
       id SERIAL PRIMARY KEY,
       nome VARCHAR(100) NOT NULL,
@@ -29,6 +23,17 @@ async function initDb(retries = 5, delay = 2000) {
       senha_hash VARCHAR(255) NOT NULL,
       criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+
+    CREATE TABLE IF NOT EXISTS tarefas (
+      id SERIAL PRIMARY KEY,
+      titulo VARCHAR(255) NOT NULL,
+      descricao TEXT,
+      concluida BOOLEAN DEFAULT FALSE,
+      usuario_id INTEGER REFERENCES usuarios(id) ON DELETE CASCADE,
+      criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    ALTER TABLE tarefas ADD COLUMN IF NOT EXISTS usuario_id INTEGER REFERENCES usuarios(id) ON DELETE CASCADE;
   `;
   while (retries > 0) {
     try {
@@ -42,6 +47,24 @@ async function initDb(retries = 5, delay = 2000) {
       await new Promise((res) => setTimeout(res, delay));
     }
   }
+}
+
+// Middleware de autenticação
+function autenticarToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ erro: 'Acesso negado. Token não fornecido.' });
+  }
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({ erro: 'Token inválido ou expirado.' });
+    }
+    req.usuario = user;
+    next();
+  });
 }
 
 app.get('/', (req, res) => {
@@ -85,6 +108,40 @@ app.post('/api/usuarios', async (req, res) => {
   } catch (error) {
     console.error('Erro ao cadastrar usuário:', error);
     res.status(500).json({ erro: 'Erro interno do servidor ao cadastrar usuário.' });
+  }
+});
+
+// Rota de login
+app.post('/api/login', async (req, res) => {
+  const { email, senha } = req.body;
+
+  if (!email || !senha) {
+    return res.status(400).json({ erro: 'E-mail e senha são obrigatórios.' });
+  }
+
+  try {
+    const usuarioResult = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
+    if (usuarioResult.rows.length === 0) {
+      return res.status(401).json({ erro: 'Credenciais inválidas.' });
+    }
+
+    const usuario = usuarioResult.rows[0];
+    const senhaValida = await bcrypt.compare(senha, usuario.senha_hash);
+
+    if (!senhaValida) {
+      return res.status(401).json({ erro: 'Credenciais inválidas.' });
+    }
+
+    const token = jwt.sign(
+      { id: usuario.id, nome: usuario.nome, email: usuario.email },
+      JWT_SECRET,
+      { expiresIn: '1d' }
+    );
+
+    res.json({ token, usuario: { id: usuario.id, nome: usuario.nome, email: usuario.email } });
+  } catch (error) {
+    console.error('Erro no login:', error);
+    res.status(500).json({ erro: 'Erro interno ao realizar login.' });
   }
 });
 
