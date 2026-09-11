@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciador de Tarefas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              bg: '#EFD3CB',
+              card: '#FFFFFF',
+              border: '#EFBABC',
+              primary: '#8E6563',
+              hover: '#BF928D',
+              accent: '#DEA7AA',
+              highlight: '#DDA8A5',
+              soft: '#F4DEDA',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #EFD3CB;
+      min-height: 100vh;
+    }
+    .fade-in {
+      animation: fadeIn 0.25s ease-in-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="font-sans text-gray-800 antialiased selection:bg-[#DEA7AA] selection:text-white min-h-screen flex flex-col">
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed top-5 right-5 z-50 transform transition-all duration-300 opacity-0 translate-y-[-20px] pointer-events-none max-w-sm w-full">
+    <div id="toast-content" class="rounded-xl p-4 shadow-xl border flex items-center gap-3 bg-white text-gray-800">
+      <span id="toast-icon" class="text-xl"></span>
+      <p id="toast-message" class="text-sm font-medium flex-1"></p>
+    </div>
+  </div>
+
+  <!-- AUTH CONTAINER (Login & Cadastro) -->
+  <div id="auth-section" class="flex-1 flex items-center justify-center p-4">
+    <div class="bg-white border-2 border-[#EFBABC] rounded-3xl shadow-xl w-full max-w-md p-8 sm:p-10 fade-in">
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#F4DEDA] border border-[#EFBABC] text-[#8E6563] mb-3 shadow-inner">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+          </svg>
+        </div>
+        <h1 class="text-2xl font-bold text-[#8E6563] tracking-tight">Gerenciador de Tarefas</h1>
+        <p class="text-sm text-gray-500 mt-1">Organize seu dia com elegância e produtividade</p>
+      </div>
+
+      <!-- Abas de navegação Login / Cadastro -->
+      <div class="flex rounded-xl bg-[#F4DEDA] p-1 mb-6">
+        <button id="tab-login" onclick="switchAuthTab('login')" class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 bg-white text-[#8E6563] shadow-sm">
+          Entrar
+        </button>
+        <button id="tab-register" onclick="switchAuthTab('register')" class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 text-gray-600 hover:text-[#8E6563]">
+          Cadastrar
+        </button>
+      </div>
+
+      <!-- Formulário de Login -->
+      <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">E-mail</label>
+          <input type="email" id="login-email" required placeholder="seu@email.com" class="w-full px-4 py-3 rounded-xl border border-[#EFBABC] bg-[#F4DEDA]/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#8E6563] transition-all text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Senha</label>
+          <input type="password" id="login-senha" required placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-[#EFBABC] bg-[#F4DEDA]/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#8E6563] transition-all text-sm">
+        </div>
+        <button type="submit" id="btn-login-submit" class="w-full py-3.5 px-4 rounded-xl bg-[#8E6563] hover:bg-[#BF928D] text-white font-semibold shadow-md hover:shadow-lg transition-all transform active:scale-[0.99] mt-2">
+          Entrar na Conta
+        </button>
+      </form>
+
+      <!-- Formulário de Cadastro -->
+      <form id="form-register" onsubmit="handleRegister(event)" class="space-y-4 hidden">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Nome Completo</label>
+          <input type="text" id="reg-nome" required placeholder="Seu nome" class="w-full px-4 py-3 rounded-xl border border-[#EFBABC] bg-[#F4DEDA]/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#8E6563] transition-all text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">E-mail</label>
+          <input type="email" id="reg-email" required placeholder="seu@email.com" class="w-full px-4 py-3 rounded-xl border border-[#EFBABC] bg-[#F4DEDA]/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#8E6563] transition-all text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Senha</label>
+          <input type="password" id="reg-senha" required placeholder="Mínimo 6 caracteres" class="w-full px-4 py-3 rounded-xl border border-[#EFBABC] bg-[#F4DEDA]/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#8E6563] transition-all text-sm">
+        </div>
+        <button type="submit" id="btn-reg-submit" class="w-full py-3.5 px-4 rounded-xl bg-[#8E6563] hover:bg-[#BF928D] text-white font-semibold shadow-md hover:shadow-lg transition-all transform active:scale-[0.99] mt-2">
+          Criar Minha Conta
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- DASHBOARD CONTAINER (Usuário Logado) -->
+  <div id="dashboard-section" class="hidden flex-1 flex flex-col">
+    <!-- Barra Superior / Navbar -->
+    <header class="bg-white border-b-2 border-[#EFBABC] shadow-sm sticky top-0 z-40">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-[#F4DEDA] border border-[#EFBABC] text-[#8E6563] flex items-center justify-center font-bold text-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="font-bold text-lg text-[#8E6563] leading-tight">Gerenciador de Tarefas</h1>
+            <p class="text-xs text-gray-500">Painel de Controle</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2 bg-[#F4DEDA] px-3.5 py-1.5 rounded-full border border-[#EFBABC]">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            <span id="user-display-name" class="text-sm font-semibold text-[#8E6563]">Usuário</span>
+          </div>
+          <button onclick="handleLogout()" title="Sair da conta" class="p-2 rounded-xl text-gray-500 hover:text-[#8E6563] hover:bg-[#F4DEDA] border border-transparent hover:border-[#EFBABC] transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full space-y-6">
+      
+      <!-- Cards de Estatísticas -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-white border-2 border-[#EFBABC] rounded-2xl p-5 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-gray-500">Total de Tarefas</p>
+            <p id="stat-total" class="text-3xl font-extrabold text-[#8E6563] mt-1">0</p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-[#F4DEDA] flex items-center justify-center text-[#8E6563]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
+          </div>
+        </div>
+
+        <div class="bg-white border-2 border-[#EFBABC] rounded-2xl p-5 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-gray-500">Pendentes</p>
+            <p id="stat-pendentes" class="text-3xl font-extrabold text-[#DEA7AA] mt-1">0</p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-[#F4DEDA] flex items-center justify-center text-[#DEA7AA]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          </div>
+        </div>
+
+        <div class="bg-white border-2 border-[#EFBABC] rounded-2xl p-5 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-gray-500">Concluídas</p>
+            <p id="stat-concluidas" class="text-3xl font-extrabold text-emerald-600 mt-1">0</p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulário de Nova Tarefa -->
+      <div class="bg-white border-2 border-[#EFBABC] rounded-3xl p-6 sm:p-8 shadow-sm">
+        <h2 class="text-lg font-bold text-[#8E6563] mb-4 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#DEA7AA]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Criar Nova Tarefa
+        </h2>
+
+        <form id="form-nova-tarefa" onsubmit="handleCreateTask(event)" class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="md:col-span-1">
+              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Título *</label>
+              <input type="text" id="tarefa-titulo" required placeholder="Ex: Finalizar relatório..." class="w-full px-4 py-3 rounded-xl border border-[#EFBABC] bg-[#F4DEDA]/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#8E6563] transition-all text-sm">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Descrição</label>
+              <div class="flex gap-2">
+                <input type="text" id="tarefa-descricao" placeholder="Detalhes opcionais da tarefa..." class="flex-1 px-4 py-3 rounded-xl border border-[#EFBABC] bg-[#F4DEDA]/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#8E6563] transition-all text-sm">
+                <button type="submit" id="btn-criar-tarefa" class="px-6 py-3 rounded-xl bg-[#8E6563] hover:bg-[#BF928D] text-white font-semibold shadow-md hover:shadow-lg transition-all transform active:scale-95 text-sm whitespace-nowrap">
+                  Adicionar
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Filtros e Lista de Tarefas -->
+      <div class="bg-white border-2 border-[#EFBABC] rounded-3xl p-6 sm:p-8 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <h2 class="text-lg font-bold text-[#8E6563]">Minhas Tarefas</h2>
+          
+          <!-- Filtro de Tarefas -->
+          <div class="inline-flex rounded-xl bg-[#F4DEDA] p-1 text-xs font-semibold">
+            <button onclick="setFilter('todas')" id="filter-todas" class="px-3 py-1.5 rounded-lg bg-white text-[#8E6563] shadow-sm">Todas</button>
+            <button onclick="setFilter('pendentes')" id="filter-pendentes" class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-[#8E6563]">Pendentes</button>
+            <button onclick="setFilter('concluidas')" id="filter-concluidas" class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-[#8E6563]">Concluídas</button>
+          </div>
+        </div>
+
+        <!-- Lista -->
+        <div id="lista-tarefas" class="space-y-3">
+          <!-- Renderizado via JavaScript -->
+        </div>
+
+        <!-- Estado Vazio -->
+        <div id="empty-state" class="hidden text-center py-12">
+          <div class="w-16 h-16 rounded-full bg-[#F4DEDA] text-[#DEA7AA] flex items-center justify-center mx-auto mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 class="text-base font-semibold text-[#8E6563]">Nenhuma tarefa encontrada</h3>
+          <p class="text-sm text-gray-500 mt-1">Você está em dia com suas atividades!</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- JAVASCRIPT VANILLA -->
+  <script>
+    // Estado da aplicação
+    let tarefas = [];
+    let currentFilter = 'todas';
+
+    // Utilitário de Toast
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastContent = document.getElementById('toast-content');
+      const toastIcon = document.getElementById('toast-icon');
+      const toastMessage = document.getElementById('toast-message');
+
+      toastMessage.textContent = message;
+      if (type === 'success') {
+        toastContent.className = 'rounded-xl p-4 shadow-xl border flex items-center gap-3 bg-white border-emerald-300 text-emerald-900';
+        toastIcon.textContent = '✓';
+      } else {
+        toastContent.className = 'rounded-xl p-4 shadow-xl border flex items-center gap-3 bg-white border-rose-300 text-rose-900';
+        toastIcon.textContent = '✕';
+      }
+
+      toast.classList.remove('opacity-0', 'translate-y-[-20px]', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-[-20px]', 'pointer-events-none');
+      }, 3500);
+    }
+
+    // Alternar abas Login / Cadastro
+    function switchAuthTab(tab) {
+      const tabLogin = document.getElementById('tab-login');
+      const tabRegister = document.getElementById('tab-register');
+      const formLogin = document.getElementById('form-login');
+      const formRegister = document.getElementById('form-register');
+
+      if (tab === 'login') {
+        tabLogin.className = 'flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 bg-white text-[#8E6563] shadow-sm';
+        tabRegister.className = 'flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 text-gray-600 hover:text-[#8E6563]';
+        formLogin.classList.remove('hidden');
+        formRegister.classList.add('hidden');
+      } else {
+        tabRegister.className = 'flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 bg-white text-[#8E6563] shadow-sm';
+        tabLogin.className = 'flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 text-gray-600 hover:text-[#8E6563]';
+        formRegister.classList.remove('hidden');
+        formLogin.classList.add('hidden');
+      }
+    }
+
+    // Verificar autenticação ao carregar página
+    function checkAuth() {
+      const token = localStorage.getItem('token');
+      const userStr = localStorage.getItem('usuario');
+
+      const authSection = document.getElementById('auth-section');
+      const dashboardSection = document.getElementById('dashboard-section');
+
+      if (token && userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          document.getElementById('user-display-name').textContent = user.nome || 'Usuário';
+          authSection.classList.add('hidden');
+          dashboardSection.classList.remove('hidden');
+          loadTasks();
+        } catch (e) {
+          handleLogout();
+        }
+      } else {
+        authSection.classList.remove('hidden');
+        dashboardSection.classList.add('hidden');
+      }
+    }
+
+    // Login
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value.trim();
+      const senha = document.getElementById('login-senha').value;
+      const btn = document.getElementById('btn-login-submit');
+
+      btn.disabled = true;
+      btn.textContent = 'Entrando...';
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, senha })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.erro || 'Falha no login');
+        }
+
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('usuario', JSON.stringify(data.usuario));
+
+        showToast(`Bem-vindo(a), ${data.usuario.nome}!`);
+        document.getElementById('form-login').reset();
+        checkAuth();
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Entrar na Conta';
+      }
+    }
+
+    // Cadastro
+    async function handleRegister(e) {
+      e.preventDefault();
+      const nome = document.getElementById('reg-nome').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const senha = document.getElementById('reg-senha').value;
+      const btn = document.getElementById('btn-reg-submit');
+
+      btn.disabled = true;
+      btn.textContent = 'Criando conta...';
+
+      try {
+        const res = await fetch('/api/usuarios', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome, email, senha })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.erro || 'Falha no cadastro');
+        }
+
+        showToast('Conta criada com sucesso! Faça login.');
+        document.getElementById('form-register').reset();
+        switchAuthTab('login');
+        document.getElementById('login-email').value = email;
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Criar Minha Conta';
+      }
+    }
+
+    // Logout
+    function handleLogout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+      tarefas = [];
+      showToast('Sessão encerrada.');
+      checkAuth();
+    }
+
+    // Helper com cabeçalho de autenticação
+    function getAuthHeaders() {
+      const token = localStorage.getItem('token');
+      return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      };
+    }
+
+    // Carregar Tarefas
+    async function loadTasks() {
+      try {
+        const res = await fetch('/api/tarefas', {
+          headers: getAuthHeaders()
+        });
+
+        if (res.status === 401 || res.status === 403) {
+          handleLogout();
+          return;
+        }
+
+        tarefas = await res.json();
+        renderTasks();
+      } catch (err) {
+        showToast('Erro ao carregar tarefas', 'error');
+      }
+    }
+
+    // Criar Tarefa
+    async function handleCreateTask(e) {
+      e.preventDefault();
+      const tituloInput = document.getElementById('tarefa-titulo');
+      const descInput = document.getElementById('tarefa-descricao');
+      const btn = document.getElementById('btn-criar-tarefa');
+
+      const titulo = tituloInput.value.trim();
+      const descricao = descInput.value.trim();
+
+      if (!titulo) return;
+
+      btn.disabled = true;
+      btn.textContent = 'Salvando...';
+
+      try {
+        const res = await fetch('/api/tarefas', {
+          method: 'POST',
+          headers: getAuthHeaders(),
+          body: JSON.stringify({ titulo, descricao })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.erro || 'Erro ao criar tarefa');
+        }
+
+        tarefas.unshift(data);
+        renderTasks();
+        tituloInput.value = '';
+        descInput.value = '';
+        showToast('Tarefa criada com sucesso!');
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Adicionar';
+      }
+    }
+
+    // Alternar Status Concluída / Pendente
+    async function toggleTaskStatus(id, currentStatus) {
+      try {
+        const res = await fetch(`/api/tarefas/${id}`, {
+          method: 'PUT',
+          headers: getAuthHeaders(),
+          body: JSON.stringify({ concluida: !currentStatus })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.erro || 'Erro ao atualizar tarefa');
+        }
+
+        const index = tarefas.findIndex(t => t.id === id);
+        if (index !== -1) {
+          tarefas[index] = data;
+          renderTasks();
+        }
+        showToast(data.concluida ? 'Tarefa marcada como concluída!' : 'Tarefa reaberta!');
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    // Excluir Tarefa
+    async function deleteTask(id) {
+      if (!confirm('Deseja realmente excluir esta tarefa?')) return;
+
+      try {
+        const res = await fetch(`/api/tarefas/${id}`, {
+          method: 'DELETE',
+          headers: getAuthHeaders()
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.erro || 'Erro ao excluir tarefa');
+        }
+
+        tarefas = tarefas.filter(t => t.id !== id);
+        renderTasks();
+        showToast('Tarefa excluída!');
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    // Definir Filtro
+    function setFilter(filter) {
+      currentFilter = filter;
+      ['todas', 'pendentes', 'concluidas'].forEach(f => {
+        const btn = document.getElementById(`filter-${f}`);
+        if (f === filter) {
+          btn.className = 'px-3 py-1.5 rounded-lg bg-white text-[#8E6563] shadow-sm';
+        } else {
+          btn.className = 'px-3 py-1.5 rounded-lg text-gray-600 hover:text-[#8E6563]';
+        }
+      });
+      renderTasks();
+    }
+
+    // Renderizar Tarefas e Estatísticas
+    function renderTasks() {
+      const container = document.getElementById('lista-tarefas');
+      const emptyState = document.getElementById('empty-state');
+
+      // Atualizar contadores
+      const total = tarefas.length;
+      const concluidas = tarefas.filter(t => t.concluida).length;
+      const pendentes = total - concluidas;
+
+      document.getElementById('stat-total').textContent = total;
+      document.getElementById('stat-pendentes').textContent = pendentes;
+      document.getElementById('stat-concluidas').textContent = concluidas;
+
+      // Filtrar
+      let filtradas = tarefas;
+      if (currentFilter === 'pendentes') filtradas = tarefas.filter(t => !t.concluida);
+      if (currentFilter === 'concluidas') filtradas = tarefas.filter(t => t.concluida);
+
+      if (filtradas.length === 0) {
+        container.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      container.innerHTML = filtradas.map(task => {
+        const dataFormatada = new Date(task.criado_em).toLocaleDateString('pt-BR', {
+          day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+        });
+
+        return `
+          <div class="group flex items-start justify-between gap-4 p-4 rounded-2xl border transition-all duration-200 ${
+            task.concluida 
+              ? 'bg-[#F4DEDA]/30 border-[#EFBABC]/50 opacity-75' 
+              : 'bg-white border-[#EFBABC] hover:border-[#8E6563] hover:shadow-md'
+          }">
+            <div class="flex items-start gap-3 flex-1 min-w-0">
+              <button 
+                onclick="toggleTaskStatus(${task.id}, ${task.concluida})" 
+                title="${task.concluida ? 'Marcar como pendente' : 'Marcar como concluída'}"
+                class="mt-1 w-6 h-6 rounded-lg border flex items-center justify-center transition-all ${
+                  task.concluida 
+                    ? 'bg-[#8E6563] border-[#8E6563] text-white' 
+                    : 'border-[#EFBABC] hover:border-[#8E6563] bg-white'
+                }">
+                ${task.concluida ? '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>' : ''}
+              </button>
+
+              <div class="flex-1 min-w-0">
+                <h4 class="font-semibold text-sm ${task.concluida ? 'line-through text-gray-500' : 'text-gray-900'} truncate">
+                  ${escapeHtml(task.titulo)}
+                </h4>
+                ${task.descricao ? `<p class="text-xs text-gray-500 mt-0.5 break-words">${escapeHtml(task.descricao)}</p>` : ''}
+                <div class="flex items-center gap-2 mt-2">
+                  <span class="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full ${
+                    task.concluida ? 'bg-emerald-100 text-emerald-700' : 'bg-[#F4DEDA] text-[#8E6563]'
+                  }">
+                    ${task.concluida ? 'Concluída' : 'Pendente'}
+                  </span>
+                  <span class="text-[11px] text-gray-400">•</span>
+                  <span class="text-[11px] text-gray-400">${dataFormatada}</span>
+                </div>
+              </div>
+            </div>
+
+            <button 
+              onclick="deleteTask(${task.id})" 
+              title="Excluir tarefa"
+              class="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Inicializar na carga da página
+    document.addEventListener('DOMContentLoaded', checkAuth);
+  </script>
+</body>
+</html>
