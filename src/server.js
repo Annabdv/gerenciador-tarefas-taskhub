@@ -2,6 +2,7 @@ const express = require('express');
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,6 +13,7 @@ const pool = new Pool({
 });
 
 app.use(express.json());
+app.use(express.static('public'));
 
 // Função de inicialização do banco de dados para criar as tabelas
 async function initDb(retries = 5, delay = 2000) {
@@ -68,7 +70,7 @@ function autenticarToken(req, res, next) {
 }
 
 app.get('/', (req, res) => {
-  res.send('<h1>Gerenciador de Tarefas — Em Construção</h1>');
+  res.sendFile(path.resolve('public', 'index.html'));
 });
 
 // Healthz realizando consulta real ao banco
