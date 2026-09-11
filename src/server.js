@@ -145,6 +145,95 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+// --- CRUD DE TAREFAS (Protegido por autenticação) ---
+
+// Listar Tarefas do Usuário (GET /api/tarefas)
+app.get('/api/tarefas', autenticarToken, async (req, res) => {
+  try {
+    const tarefas = await pool.query(
+      'SELECT * FROM tarefas WHERE usuario_id = $1 ORDER BY criado_em DESC',
+      [req.usuario.id]
+    );
+    res.json(tarefas.rows);
+  } catch (error) {
+    console.error('Erro ao buscar tarefas:', error);
+    res.status(500).json({ erro: 'Erro ao buscar tarefas.' });
+  }
+});
+
+// Criar Nova Tarefa (POST /api/tarefas)
+app.post('/api/tarefas', autenticarToken, async (req, res) => {
+  const { titulo, descricao } = req.body;
+
+  if (!titulo) {
+    return res.status(400).json({ erro: 'O título da tarefa é obrigatório.' });
+  }
+
+  try {
+    const novaTarefa = await pool.query(
+      'INSERT INTO tarefas (titulo, descricao, usuario_id) VALUES ($1, $2, $3) RETURNING *',
+      [titulo, descricao || '', req.usuario.id]
+    );
+    res.status(201).json(novaTarefa.rows[0]);
+  } catch (error) {
+    console.error('Erro ao criar tarefa:', error);
+    res.status(500).json({ erro: 'Erro ao criar tarefa.' });
+  }
+});
+
+// Atualizar Tarefa (PUT /api/tarefas/:id)
+app.put('/api/tarefas/:id', autenticarToken, async (req, res) => {
+  const { id } = req.params;
+  const { titulo, descricao, concluida } = req.body;
+
+  try {
+    const tarefaExistente = await pool.query(
+      'SELECT * FROM tarefas WHERE id = $1 AND usuario_id = $2',
+      [id, req.usuario.id]
+    );
+
+    if (tarefaExistente.rows.length === 0) {
+      return res.status(404).json({ erro: 'Tarefa não encontrada.' });
+    }
+
+    const tarefaAtual = tarefaExistente.rows[0];
+    const novoTitulo = titulo !== undefined ? titulo : tarefaAtual.titulo;
+    const novaDescricao = descricao !== undefined ? descricao : tarefaAtual.descricao;
+    const novaConcluida = concluida !== undefined ? concluida : tarefaAtual.concluida;
+
+    const tarefaAtualizada = await pool.query(
+      'UPDATE tarefas SET titulo = $1, descricao = $2, concluida = $3 WHERE id = $4 AND usuario_id = $5 RETURNING *',
+      [novoTitulo, novaDescricao, novaConcluida, id, req.usuario.id]
+    );
+
+    res.json(tarefaAtualizada.rows[0]);
+  } catch (error) {
+    console.error('Erro ao atualizar tarefa:', error);
+    res.status(500).json({ erro: 'Erro ao atualizar tarefa.' });
+  }
+});
+
+// Deletar Tarefa (DELETE /api/tarefas/:id)
+app.delete('/api/tarefas/:id', autenticarToken, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const resultado = await pool.query(
+      'DELETE FROM tarefas WHERE id = $1 AND usuario_id = $2 RETURNING *',
+      [id, req.usuario.id]
+    );
+
+    if (resultado.rows.length === 0) {
+      return res.status(404).json({ erro: 'Tarefa não encontrada.' });
+    }
+
+    res.json({ mensagem: 'Tarefa removida com sucesso.' });
+  } catch (error) {
+    console.error('Erro ao deletar tarefa:', error);
+    res.status(500).json({ erro: 'Erro ao deletar tarefa.' });
+  }
+});
+
 app.listen(PORT, async () => {
   console.log(`Servidor rodando na porta ${PORT}`);
   await initDb();
