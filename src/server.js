@@ -1,5 +1,6 @@
 const express = require('express');
 const { Pool } = require('pg');
+const bcrypt = require('bcryptjs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,7 +11,7 @@ const pool = new Pool({
 
 app.use(express.json());
 
-// Função de inicialização do banco de dados para criar a tabela de tarefas
+// Função de inicialização do banco de dados para criar as tabelas
 async function initDb(retries = 5, delay = 2000) {
   const queryText = `
     CREATE TABLE IF NOT EXISTS tarefas (
@@ -20,11 +21,19 @@ async function initDb(retries = 5, delay = 2000) {
       concluida BOOLEAN DEFAULT FALSE,
       criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+
+    CREATE TABLE IF NOT EXISTS usuarios (
+      id SERIAL PRIMARY KEY,
+      nome VARCHAR(100) NOT NULL,
+      email VARCHAR(150) UNIQUE NOT NULL,
+      senha_hash VARCHAR(255) NOT NULL,
+      criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
   `;
   while (retries > 0) {
     try {
       await pool.query(queryText);
-      console.log('Tabela "tarefas" verificada/criada com sucesso.');
+      console.log('Tabelas verificadas/criadas com sucesso.');
       break;
     } catch (error) {
       retries -= 1;
@@ -47,6 +56,35 @@ app.get('/healthz', async (req, res) => {
   } catch (error) {
     console.error('Erro de conexão com o banco:', error);
     res.status(500).send('Database connection error');
+  }
+});
+
+// Rota para cadastrar novos usuários
+app.post('/api/usuarios', async (req, res) => {
+  const { nome, email, senha } = req.body;
+
+  if (!nome || !email || !senha) {
+    return res.status(400).json({ erro: 'Nome, email e senha são obrigatórios.' });
+  }
+
+  try {
+    const emailExistente = await pool.query('SELECT id FROM usuarios WHERE email = $1', [email]);
+    if (emailExistente.rows.length > 0) {
+      return res.status(400).json({ erro: 'E-mail já cadastrado.' });
+    }
+
+    const saltRounds = 10;
+    const senhaHash = await bcrypt.hash(senha, saltRounds);
+
+    const novoUsuario = await pool.query(
+      'INSERT INTO usuarios (nome, email, senha_hash) VALUES ($1, $2, $3) RETURNING id, nome, email, criado_em',
+      [nome, email, senhaHash]
+    );
+
+    res.status(201).json(novoUsuario.rows[0]);
+  } catch (error) {
+    console.error('Erro ao cadastrar usuário:', error);
+    res.status(500).json({ erro: 'Erro interno do servidor ao cadastrar usuário.' });
   }
 });
 
