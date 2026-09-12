@@ -1,4 +1,4 @@
-name: Deploy na Produção
+name: Deploy na Producao
 
 on:
   push:
@@ -9,18 +9,11 @@ permissions:
   contents: read
   packages: write
 
-services:
-  app:
-    ports:
-      - "8080:8080"
-    environment:
-      - PORT=8080
-      
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout do código
+      - name: Checkout do codigo
         uses: actions/checkout@v4
 
       - name: Autenticar no GitHub Container Registry (ghcr.io)
