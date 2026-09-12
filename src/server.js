@@ -5,10 +5,11 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+
+const PORT = process.env.PORT || 8080;
+
+// REMOVIDO: a primeira chamada do app.listen que ficava aqui foi apagada.
+
 const JWT_SECRET = process.env.JWT_SECRET || 'chave_secreta_para_desenvolvimento';
 
 const pool = new Pool({
@@ -239,7 +240,12 @@ app.delete('/api/tarefas/:id', autenticarToken, async (req, res) => {
   }
 });
 
-app.listen(PORT, async () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+// INICIALIZAÇÃO ÚNICA DO SERVIDOR
+async function startServer() {
   await initDb();
-});
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+  });
+}
+
+startServer();
