@@ -9,6 +9,13 @@ permissions:
   contents: read
   packages: write
 
+services:
+  app:
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
