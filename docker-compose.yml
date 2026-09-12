@@ -2,9 +2,9 @@ services:
   app:
     build: .
     ports:
-      - "3000:3000"
+      - "8080:8080"
     environment:
-      - PORT=3000
+      - PORT=8080
       - DATABASE_URL=postgres://postgres:postgres@db:5432/gerenciador_tarefas
     depends_on:
       - db
@@ -19,15 +19,6 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
-  caddy:
-    image: caddy:2-alpine
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-    depends_on:
-      - app
 
 volumes:
   postgres_data:
