@@ -5,11 +5,39 @@ on:
     branches:
       - '*'
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Executar Deploy via SSH Nativo
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Autenticar no GitHub Container Registry (ghcr.io)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Gerar nome da imagem em caixa baixa
+        id: image_name
+        run: |
+          IMAGE_ID=ghcr.io/${{ github.repository }}
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          echo "IMAGE=$IMAGE_ID" >> $GITHUB_OUTPUT
+
+      - name: Build e Push da Imagem Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.image_name.outputs.IMAGE }}:latest
+
+      - name: Disparar Deploy via SSH Nativo
         env:
           SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
           HOST: ${{ secrets.SERVER_HOST }}
@@ -21,4 +49,4 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
 
-          echo "${{ github.actor }}:$TOKEN" | ssh -o StrictHostKeyChecking=no $USER@$HOST "cd ~/atividade2-crud-anna.alves || cd /home/$USER/atividade2-crud-anna.alves && git checkout main && git pull && docker compose down && docker compose up --build -d"
+          echo "${{ github.actor }}:$TOKEN" | ssh -o StrictHostKeyChecking=no $USER@$HOST
