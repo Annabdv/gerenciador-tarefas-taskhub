@@ -3,7 +3,7 @@ name: Deploy na Producao
 on:
   push:
     branches:
-      - '*'
+      - main
 
 permissions:
   contents: read
