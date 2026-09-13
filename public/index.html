@@ -8,8 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Italiana&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
     rel="stylesheet">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -17,17 +18,17 @@
         extend: {
           fontFamily: {
             sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            brand: ['"Cinzel Decorative"', 'serif'],
+            brand: ['"Italiana"', 'serif'],
           },
           colors: {
             brand: {
-              bg: '#EFD3CB',
-              card: '#FDF7F8',
+              bg: '#DEBCBF',
+              card: '#F5E6E8',
               border: '#D19BA4',
               primary: '#C07A86',
               hover: '#B57778',
               accent: '#915156',
-              soft: '#F5E6E8',
+              soft: '#E7D3D7',
             }
           }
         }
@@ -64,15 +65,52 @@
   <!-- Toast Notification -->
   <div id="toast"
     class="fixed top-5 right-5 z-50 transform transition-all duration-300 opacity-0 translate-y-[-20px] pointer-events-none max-w-sm w-full">
-    <div id="toast-content" class="rounded-xl p-4 shadow-xl border flex items-center gap-3 bg-white text-gray-800">
+    <div id="toast-content" class="rounded-xl p-4 shadow-xl border flex items-center gap-3 bg-brand-card text-gray-800">
       <span id="toast-icon" class="text-xl"></span>
       <p id="toast-message" class="text-sm font-medium flex-1"></p>
     </div>
   </div>
 
+  <!-- MODAL DE EDIÇÃO DA TAREFA -->
+  <div id="modal-edit"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm hidden p-4">
+    <div class="bg-brand-card border-2 border-brand-border rounded-3xl p-6 sm:p-8 w-full max-w-md shadow-2xl fade-in">
+      <h3 class="text-lg font-bold text-brand-accent mb-4">Editar Tarefa</h3>
+      <form id="form-edit-tarefa" onsubmit="handleSaveEditTask(event)" class="space-y-4">
+        <input type="hidden" id="edit-tarefa-id">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Título *</label>
+          <input type="text" id="edit-tarefa-titulo" required
+            class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Prazo / Data Limite
+            (Opcional)</label>
+          <input type="datetime-local" id="edit-tarefa-data"
+            class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Descrição</label>
+          <textarea id="edit-tarefa-descricao" rows="3"
+            class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm"></textarea>
+        </div>
+        <div class="flex justify-end gap-3 pt-2">
+          <button type="button" onclick="closeEditModal()"
+            class="px-4 py-2.5 rounded-xl border border-brand-border text-gray-700 hover:bg-brand-soft text-sm font-semibold transition-all">
+            Cancelar
+          </button>
+          <button type="submit" id="btn-salvar-edit"
+            class="px-5 py-2.5 rounded-xl bg-brand-primary hover:bg-brand-hover text-white text-sm font-semibold shadow-md transition-all">
+            Salvar Alterações
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- AUTH CONTAINER (Login & Cadastro) -->
   <div id="auth-section" class="flex-1 flex items-center justify-center p-4">
-    <div class="bg-white border-2 border-brand-border rounded-3xl shadow-xl w-full max-w-md p-8 sm:p-10 fade-in">
+    <div class="bg-brand-card border-2 border-brand-border rounded-3xl shadow-xl w-full max-w-md p-8 sm:p-10 fade-in">
       <div class="text-center mb-8">
         <div
           class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-soft border border-brand-border text-brand-accent mb-3 shadow-inner">
@@ -82,17 +120,15 @@
               d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
           </svg>
         </div>
-        <!-- Nome principal NODE com Cinzel Decorative -->
         <h1 class="font-brand text-4xl font-extrabold text-brand-accent tracking-wider">NODE</h1>
         <p class="text-xs font-semibold uppercase tracking-widest text-brand-primary mt-1">Notes, Organize, Do, Execute
         </p>
         <p class="text-[11px] text-gray-400 mt-0.5">Gerenciador de Tarefas</p>
       </div>
 
-      <!-- Abas de navegação Login / Cadastro -->
       <div class="flex rounded-xl bg-brand-soft p-1 mb-6">
         <button id="tab-login" onclick="switchAuthTab('login')"
-          class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 bg-white text-brand-accent shadow-sm">
+          class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 bg-brand-card text-brand-accent shadow-sm">
           Entrar
         </button>
         <button id="tab-register" onclick="switchAuthTab('register')"
@@ -101,17 +137,16 @@
         </button>
       </div>
 
-      <!-- Formulário de Login -->
       <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">E-mail</label>
           <input type="email" id="login-email" required placeholder="seu@email.com"
-            class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
+            class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
         </div>
         <div>
           <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Senha</label>
           <input type="password" id="login-senha" required placeholder="••••••••"
-            class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
+            class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
         </div>
         <button type="submit" id="btn-login-submit"
           class="w-full py-3.5 px-4 rounded-xl bg-brand-primary hover:bg-brand-hover text-white font-semibold shadow-md hover:shadow-lg transition-all transform active:scale-[0.99] mt-2">
@@ -119,22 +154,21 @@
         </button>
       </form>
 
-      <!-- Formulário de Cadastro -->
       <form id="form-register" onsubmit="handleRegister(event)" class="space-y-4 hidden">
         <div>
           <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Nome Completo</label>
           <input type="text" id="reg-nome" required placeholder="Seu nome"
-            class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
+            class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
         </div>
         <div>
           <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">E-mail</label>
           <input type="email" id="reg-email" required placeholder="seu@email.com"
-            class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
+            class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
         </div>
         <div>
           <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Senha</label>
           <input type="password" id="reg-senha" required placeholder="Mínimo 6 caracteres"
-            class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
+            class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
         </div>
         <button type="submit" id="btn-reg-submit"
           class="w-full py-3.5 px-4 rounded-xl bg-brand-primary hover:bg-brand-hover text-white font-semibold shadow-md hover:shadow-lg transition-all transform active:scale-[0.99] mt-2">
@@ -144,10 +178,9 @@
     </div>
   </div>
 
-  <!-- DASHBOARD CONTAINER (Usuário Logado) -->
+  <!-- DASHBOARD CONTAINER -->
   <div id="dashboard-section" class="hidden flex-1 flex flex-col">
-    <!-- Barra Superior / Navbar -->
-    <header class="bg-white border-b-2 border-brand-border shadow-sm sticky top-0 z-40">
+    <header class="bg-brand-card border-b-2 border-brand-border shadow-sm sticky top-0 z-40">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
         <div class="flex items-center gap-3">
           <div
@@ -182,12 +215,12 @@
       </div>
     </header>
 
-    <!-- Conteúdo Principal -->
     <main class="max-w-5xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full space-y-6">
 
       <!-- Cards de Estatísticas -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="bg-white border-2 border-brand-border rounded-2xl p-5 shadow-sm flex items-center justify-between">
+        <div
+          class="bg-brand-card border-2 border-brand-border rounded-2xl p-5 shadow-sm flex items-center justify-between">
           <div>
             <p class="text-xs font-semibold uppercase tracking-wider text-gray-500">Total de Tarefas</p>
             <p id="stat-total" class="text-3xl font-extrabold text-brand-accent mt-1">0</p>
@@ -201,7 +234,8 @@
           </div>
         </div>
 
-        <div class="bg-white border-2 border-brand-border rounded-2xl p-5 shadow-sm flex items-center justify-between">
+        <div
+          class="bg-brand-card border-2 border-brand-border rounded-2xl p-5 shadow-sm flex items-center justify-between">
           <div>
             <p class="text-xs font-semibold uppercase tracking-wider text-gray-500">Pendentes</p>
             <p id="stat-pendentes" class="text-3xl font-extrabold text-brand-primary mt-1">0</p>
@@ -215,7 +249,8 @@
           </div>
         </div>
 
-        <div class="bg-white border-2 border-brand-border rounded-2xl p-5 shadow-sm flex items-center justify-between">
+        <div
+          class="bg-brand-card border-2 border-brand-border rounded-2xl p-5 shadow-sm flex items-center justify-between">
           <div>
             <p class="text-xs font-semibold uppercase tracking-wider text-gray-500">Concluídas</p>
             <p id="stat-concluidas" class="text-3xl font-extrabold text-emerald-600 mt-1">0</p>
@@ -231,7 +266,7 @@
       </div>
 
       <!-- Formulário de Nova Tarefa -->
-      <div class="bg-white border-2 border-brand-border rounded-3xl p-6 sm:p-8 shadow-sm">
+      <div class="bg-brand-card border-2 border-brand-border rounded-3xl p-6 sm:p-8 shadow-sm">
         <h2 class="text-lg font-bold text-brand-accent mb-4 flex items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-brand-primary" fill="none" viewBox="0 0 24 24"
             stroke="currentColor">
@@ -245,18 +280,18 @@
             <div>
               <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Título *</label>
               <input type="text" id="tarefa-titulo" required placeholder="Ex: Finalizar relatório..."
-                class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
+                class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
             </div>
             <div>
-              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Data e Hora
-                (opcional)</label>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Prazo / Data Limite
+                (Opcional)</label>
               <input type="datetime-local" id="tarefa-data"
-                class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
+                class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
             </div>
             <div>
               <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Descrição</label>
               <input type="text" id="tarefa-descricao" placeholder="Detalhes opcionais..."
-                class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
+                class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
             </div>
           </div>
           <div class="flex justify-end mt-2">
@@ -268,24 +303,22 @@
         </form>
       </div>
 
-      <!-- Filtros, Modo de Exibição e Lista de Tarefas -->
-      <div class="bg-white border-2 border-brand-border rounded-3xl p-6 sm:p-8 shadow-sm">
+      <!-- Lista de Tarefas -->
+      <div class="bg-brand-card border-2 border-brand-border rounded-3xl p-6 sm:p-8 shadow-sm">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <h2 class="text-lg font-bold text-brand-accent">Minhas Tarefas</h2>
 
           <div class="flex flex-wrap items-center gap-3">
-            <!-- Alternador de Modo: Lista / Grade Mensal -->
             <div class="inline-flex rounded-xl bg-brand-soft p-1 text-xs font-semibold border border-brand-border">
               <button onclick="setViewMode('lista')" id="view-lista"
-                class="px-3 py-1.5 rounded-lg bg-white text-brand-accent shadow-sm">Lista</button>
+                class="px-3 py-1.5 rounded-lg bg-brand-card text-brand-accent shadow-sm">Lista</button>
               <button onclick="setViewMode('grade')" id="view-grade"
                 class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-brand-accent">Grade por Mês</button>
             </div>
 
-            <!-- Filtro de Status -->
             <div class="inline-flex rounded-xl bg-brand-soft p-1 text-xs font-semibold">
               <button onclick="setFilter('todas')" id="filter-todas"
-                class="px-3 py-1.5 rounded-lg bg-white text-brand-accent shadow-sm">Todas</button>
+                class="px-3 py-1.5 rounded-lg bg-brand-card text-brand-accent shadow-sm">Todas</button>
               <button onclick="setFilter('pendentes')" id="filter-pendentes"
                 class="px-3 py-1.5 rounded-lg text-gray-600 hover:text-brand-accent">Pendentes</button>
               <button onclick="setFilter('concluidas')" id="filter-concluidas"
@@ -294,12 +327,8 @@
           </div>
         </div>
 
-        <!-- Conteúdo Renderizado -->
-        <div id="lista-tarefas">
-          <!-- Renderizado via JavaScript -->
-        </div>
+        <div id="lista-tarefas"></div>
 
-        <!-- Estado Vazio -->
         <div id="empty-state" class="hidden text-center py-12">
           <div
             class="w-16 h-16 rounded-full bg-brand-soft text-brand-primary flex items-center justify-center mx-auto mb-3">
@@ -330,10 +359,10 @@
 
       toastMessage.textContent = message;
       if (type === 'success') {
-        toastContent.className = 'rounded-xl p-4 shadow-xl border flex items-center gap-3 bg-white border-emerald-300 text-emerald-900';
+        toastContent.className = 'rounded-xl p-4 shadow-xl border flex items-center gap-3 bg-brand-card border-emerald-300 text-emerald-900';
         toastIcon.textContent = '✓';
       } else {
-        toastContent.className = 'rounded-xl p-4 shadow-xl border flex items-center gap-3 bg-white border-rose-300 text-rose-900';
+        toastContent.className = 'rounded-xl p-4 shadow-xl border flex items-center gap-3 bg-brand-card border-rose-300 text-rose-900';
         toastIcon.textContent = '✕';
       }
 
@@ -353,12 +382,12 @@
       const formRegister = document.getElementById('form-register');
 
       if (tab === 'login') {
-        tabLogin.className = 'flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 bg-white text-brand-accent shadow-sm';
+        tabLogin.className = 'flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 bg-brand-card text-brand-accent shadow-sm';
         tabRegister.className = 'flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 text-gray-600 hover:text-brand-accent';
         formLogin.classList.remove('hidden');
         formRegister.classList.add('hidden');
       } else {
-        tabRegister.className = 'flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 bg-white text-brand-accent shadow-sm';
+        tabRegister.className = 'flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 bg-brand-card text-brand-accent shadow-sm';
         tabLogin.className = 'flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 text-gray-600 hover:text-brand-accent';
         formRegister.classList.remove('hidden');
         formLogin.classList.add('hidden');
@@ -494,7 +523,7 @@
 
       const titulo = tituloInput.value.trim();
       const descricao = descInput.value.trim();
-      const data_vencimento = dataInput.value || null;
+      const data_vencimento = dataInput.value ? new Date(dataInput.value).toISOString() : null;
 
       if (!titulo) return;
 
@@ -511,8 +540,7 @@
         const data = await res.json();
         if (!res.ok) throw new Error(data.erro || 'Erro ao criar tarefa');
 
-        tarefas.unshift(data);
-        renderTasks();
+        await loadTasks();
         tituloInput.value = '';
         descInput.value = '';
         dataInput.value = '';
@@ -522,6 +550,61 @@
       } finally {
         btn.disabled = false;
         btn.textContent = 'Adicionar Tarefa';
+      }
+    }
+
+    // LÓGICA DE EDIÇÃO DE TAREFA (MODAL)
+    function openEditModal(id) {
+      const tarefa = tarefas.find(t => t.id === id);
+      if (!tarefa) return;
+
+      document.getElementById('edit-tarefa-id').value = tarefa.id;
+      document.getElementById('edit-tarefa-titulo').value = tarefa.titulo;
+      document.getElementById('edit-tarefa-descricao').value = tarefa.descricao || '';
+
+      if (tarefa.data_vencimento) {
+        const d = new Date(tarefa.data_vencimento);
+        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+        document.getElementById('edit-tarefa-data').value = d.toISOString().slice(0, 16);
+      } else {
+        document.getElementById('edit-tarefa-data').value = '';
+      }
+
+      document.getElementById('modal-edit').classList.remove('hidden');
+    }
+
+    function closeEditModal() {
+      document.getElementById('modal-edit').classList.add('hidden');
+    }
+
+    async function handleSaveEditTask(e) {
+      e.preventDefault();
+      const id = document.getElementById('edit-tarefa-id').value;
+      const titulo = document.getElementById('edit-tarefa-titulo').value.trim();
+      const descricao = document.getElementById('edit-tarefa-descricao').value.trim();
+      const dataRaw = document.getElementById('edit-tarefa-data').value;
+      const data_vencimento = dataRaw ? new Date(dataRaw).toISOString() : null;
+      const btn = document.getElementById('btn-salvar-edit');
+
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`/api/tarefas/${id}`, {
+          method: 'PUT',
+          headers: getAuthHeaders(),
+          body: JSON.stringify({ titulo, descricao, data_vencimento })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.erro || 'Erro ao salvar alterações');
+
+        closeEditModal();
+        await loadTasks();
+        showToast('Tarefa atualizada com sucesso!');
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally {
+        btn.disabled = false;
       }
     }
 
@@ -536,11 +619,7 @@
         const data = await res.json();
         if (!res.ok) throw new Error(data.erro || 'Erro ao atualizar tarefa');
 
-        const index = tarefas.findIndex(t => t.id === id);
-        if (index !== -1) {
-          tarefas[index] = data;
-          renderTasks();
-        }
+        await loadTasks();
         showToast(data.concluida ? 'Tarefa concluída!' : 'Tarefa reaberta!');
       } catch (err) {
         showToast(err.message, 'error');
@@ -559,8 +638,7 @@
         const data = await res.json();
         if (!res.ok) throw new Error(data.erro || 'Erro ao excluir tarefa');
 
-        tarefas = tarefas.filter(t => t.id !== id);
-        renderTasks();
+        await loadTasks();
         showToast('Tarefa excluída!');
       } catch (err) {
         showToast(err.message, 'error');
@@ -572,7 +650,7 @@
       ['todas', 'pendentes', 'concluidas'].forEach(f => {
         const btn = document.getElementById(`filter-${f}`);
         if (f === filter) {
-          btn.className = 'px-3 py-1.5 rounded-lg bg-white text-brand-accent shadow-sm';
+          btn.className = 'px-3 py-1.5 rounded-lg bg-brand-card text-brand-accent shadow-sm';
         } else {
           btn.className = 'px-3 py-1.5 rounded-lg text-gray-600 hover:text-brand-accent';
         }
@@ -582,8 +660,8 @@
 
     function setViewMode(mode) {
       currentViewMode = mode;
-      document.getElementById('view-lista').className = mode === 'lista' ? 'px-3 py-1.5 rounded-lg bg-white text-brand-accent shadow-sm' : 'px-3 py-1.5 rounded-lg text-gray-600 hover:text-brand-accent';
-      document.getElementById('view-grade').className = mode === 'grade' ? 'px-3 py-1.5 rounded-lg bg-white text-brand-accent shadow-sm' : 'px-3 py-1.5 rounded-lg text-gray-600 hover:text-brand-accent';
+      document.getElementById('view-lista').className = mode === 'lista' ? 'px-3 py-1.5 rounded-lg bg-brand-card text-brand-accent shadow-sm' : 'px-3 py-1.5 rounded-lg text-gray-600 hover:text-brand-accent';
+      document.getElementById('view-grade').className = mode === 'grade' ? 'px-3 py-1.5 rounded-lg bg-brand-card text-brand-accent shadow-sm' : 'px-3 py-1.5 rounded-lg text-gray-600 hover:text-brand-accent';
       renderTasks();
     }
 
@@ -621,15 +699,21 @@
     }
 
     function renderTaskItem(task) {
-      const dataRef = task.data_vencimento || task.criado_em;
-      const dataFormatada = new Date(dataRef).toLocaleDateString('pt-BR', {
-        day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+      const dataCriacao = new Date(task.criado_em).toLocaleDateString('pt-BR', {
+        day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
       });
+
+      let prazoTexto = '';
+      if (task.data_vencimento) {
+        prazoTexto = new Date(task.data_vencimento).toLocaleDateString('pt-BR', {
+          day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+      }
 
       return `
         <div class="group flex items-start justify-between gap-4 p-4 rounded-2xl border transition-all duration-200 ${task.concluida
           ? 'bg-brand-soft/30 border-brand-border/50 opacity-75'
-          : 'bg-white border-brand-border hover:border-brand-accent hover:shadow-md'
+          : 'bg-brand-card border-brand-border hover:border-brand-accent hover:shadow-md'
         }">
           <div class="flex items-start gap-3 flex-1 min-w-0">
             <button 
@@ -637,7 +721,7 @@
               title="${task.concluida ? 'Marcar como pendente' : 'Marcar como concluída'}"
               class="mt-1 w-6 h-6 rounded-lg border flex items-center justify-center transition-all ${task.concluida
           ? 'bg-brand-primary border-brand-primary text-white'
-          : 'border-brand-border hover:border-brand-accent bg-white'
+          : 'border-brand-border hover:border-brand-accent bg-brand-card'
         }">
               ${task.concluida ? '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>' : ''}
             </button>
@@ -647,25 +731,41 @@
                 ${escapeHtml(task.titulo)}
               </h4>
               ${task.descricao ? `<p class="text-xs text-gray-500 mt-0.5 break-words">${escapeHtml(task.descricao)}</p>` : ''}
-              <div class="flex items-center gap-2 mt-2">
-                <span class="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full ${task.concluida ? 'bg-emerald-100 text-emerald-700' : 'bg-brand-soft text-brand-accent'
+              
+              <div class="flex flex-wrap items-center gap-2 mt-2 text-[11px]">
+                <span class="inline-flex items-center gap-1 font-medium px-2 py-0.5 rounded-full ${task.concluida ? 'bg-emerald-100 text-emerald-700' : 'bg-brand-soft text-brand-accent'
         }">
                   ${task.concluida ? 'Concluída' : 'Pendente'}
                 </span>
-                <span class="text-[11px] text-gray-400">•</span>
-                <span class="text-[11px] text-gray-400">📅 ${dataFormatada}</span>
+                <span class="text-gray-400">•</span>
+                <span class="text-gray-500" title="Data em que a tarefa foi salva no sistema">Cadastrado: ${dataCriacao}</span>
+                ${prazoTexto ? `
+                  <span class="text-gray-400">•</span>
+                  <span class="font-semibold text-brand-primary" title="Prazo final informado">Prazo: 📅 ${prazoTexto}</span>
+                ` : ''}
               </div>
             </div>
           </div>
 
-          <button 
-            onclick="deleteTask(${task.id})" 
-            title="Excluir tarefa"
-            class="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-          </button>
+          <div class="flex items-center gap-1">
+            <button 
+              onclick="openEditModal(${task.id})" 
+              title="Editar tarefa"
+              class="p-2 text-gray-400 hover:text-brand-accent hover:bg-brand-soft rounded-xl transition-all">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </button>
+
+            <button 
+              onclick="deleteTask(${task.id})" 
+              title="Excluir tarefa"
+              class="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+          </div>
         </div>
       `;
     }
