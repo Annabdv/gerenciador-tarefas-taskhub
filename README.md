@@ -1,10 +1,15 @@
-# Gerenciador de Tarefas — CRUD com Autenticação
+# NODE — Notes, Organize, Do, Execute
 
-Aplicação web desenvolvida para a Atividade 2 da disciplina, com foco em autenticação de usuários, gerenciamento de tarefas e esteira automatizada de CI/CD.
+Aplicação web full-stack desenvolvida com Node.js, PostgreSQL e Tailwind CSS para a Atividade 2 da disciplina, focada no gerenciamento eficiente de tarefas, autenticação segura e esteira automatizada de CI/CD.
+
+> **Visual & Identidade:** Paleta em tons de rosa elegante, tipografia refinada (*Cinzel Decorative* & *Plus Jakarta Sans*) e modos flexíveis de exibição (Lista ou Grade agrupada por Mês).
+
+---
 
 ## 🚀 Tecnologias Utilizadas
 
-- **Backend:** Node.js (Express)
+- **Backend:** Node.js (Express), JWT, BcryptJS
+- **Frontend:** HTML5, JavaScript (Vanilla), Tailwind CSS
 - **Banco de Dados:** PostgreSQL
 - **Servidor Web / Proxy Reverso:** Caddy
 - **Containerização:** Docker & Docker Compose
@@ -14,18 +19,23 @@ Aplicação web desenvolvida para a Atividade 2 da disciplina, com foco em auten
 
 ## 📌 Funcionalidades
 
-### **Autenticação**
-- `POST /api/usuarios` — Cadastro de novos usuários (senhas criptografadas com `bcryptjs`).
-- `POST /api/login` — Autenticação de usuários com geração de token `JWT`.
+### Autenticação
+- `POST /api/usuarios` — Cadastro de novos usuários com senhas criptografadas.
+- `POST /api/login` — Autenticação de usuários com geração de token JWT.
 
-### **CRUD de Tarefas (Protegido por Token JWT)**
-- `GET /api/tarefas` — Lista todas as tarefas do usuário autenticado (READ).
-- `POST /api/tarefas` — Cria uma nova tarefa (CREATE).
-- `PUT /api/tarefas/:id` — Atualiza o título, descrição ou status de conclusão de uma tarefa (UPDATE).
+### CRUD de Tarefas (Protegido por JWT)
+- `GET /api/tarefas` — Lista as tarefas do usuário autenticado (READ).
+- `POST /api/tarefas` — Cria uma nova tarefa com título, descrição e data/hora de vencimento opcional (CREATE).
+- `PUT /api/tarefas/:id` — Atualiza título, descrição, status de conclusão ou data/hora (UPDATE).
 - `DELETE /api/tarefas/:id` — Remove uma tarefa existente (DELETE).
 
-### **Monitoramento**
-- `GET /healthz` — Executa uma consulta real no banco (`SELECT 1`) e retorna status `200 OK` para validar a saúde da aplicação.
+### Produtividade & UI
+- **Visualização em Grade por Mês:** Organização automática das tarefas agrupadas pelo mês de vencimento.
+- **Data e Hora de Vencimento:** Suporte a agendamentos com exibição formatada.
+- **Filtros de Status:** Filtragem em tempo real (Todas, Pendentes, Concluídas).
+
+### Monitoramento
+- `GET /healthz` — Consulta real no banco (`SELECT 1`) retornando status `200 OK` para validar a saúde da aplicação.
 
 ---
 
@@ -33,5 +43,5 @@ Aplicação web desenvolvida para a Atividade 2 da disciplina, com foco em auten
 
 1. **Clone o repositório:**
    ```bash
-   git clone [https://github.com/seu-usuario/atividade2-crud-anna.alves.git](https://github.com/seu-usuario/atividade2-crud-anna.alves.git)
+   git clone [https://github.com/lab-rodrigor/atividade2-crud-anna.alves.git](https://github.com/lab-rodrigor/atividade2-crud-anna.alves.git)
    cd atividade2-crud-anna.alves
