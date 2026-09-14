@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./public/images/node.photo" alt="Logo NODE" width="300">
+</p>
+
 # NODE — Notes, Organize, Do, Execute
 
 Aplicação web full-stack desenvolvida com Node.js, PostgreSQL e Tailwind CSS para a Atividade 2 da disciplina, focada no gerenciamento eficiente de tarefas, autenticação segura e esteira automatizada de CI/CD.
