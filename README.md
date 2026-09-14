@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./public/images/node.photo" alt="Logo NODE" width="300">
+  <img src="./public/images/node.png.png" alt="Logo NODE" width="300">
 </p>
 
 # NODE — Notes, Organize, Do, Execute
