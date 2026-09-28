@@ -6,8 +6,6 @@
 
 Aplicação web full-stack desenvolvida com Node.js, PostgreSQL e Tailwind CSS para a Atividade 2 da disciplina, focada no gerenciamento eficiente de tarefas, autenticação segura e esteira automatizada de CI/CD.
 
-> **Visual & Identidade:** Paleta em tons de rosa elegante, tipografia refinada (*Cinzel Decorative* & *Plus Jakarta Sans*) e modos flexíveis de exibição (Lista ou Grade agrupada por Mês).
-
 ---
 
 ## 🚀 Tecnologias Utilizadas
