@@ -155,6 +155,144 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+// --- ROTAS DE PERFIL E SEGURANÇA DO USUÁRIO ---
+
+// Atualizar Perfil (Nome e E-mail) - Autenticado
+app.put('/api/usuarios/perfil', autenticarToken, async (req, res) => {
+  const { nome, email } = req.body;
+
+  if (!nome || !email) {
+    return res.status(400).json({ erro: 'Nome e e-mail são obrigatórios.' });
+  }
+
+  try {
+    // Verifica se o e-mail já está sendo utilizado por outro usuário
+    const emailExistente = await pool.query(
+      'SELECT id FROM usuarios WHERE email = $1 AND id != $2',
+      [email, req.usuario.id]
+    );
+
+    if (emailExistente.rows.length > 0) {
+      return res.status(400).json({ erro: 'Este e-mail já está em uso por outro usuário.' });
+    }
+
+    const usuarioAtualizado = await pool.query(
+      'UPDATE usuarios SET nome = $1, email = $2 WHERE id = $3 RETURNING id, nome, email, criado_em',
+      [nome, email, req.usuario.id]
+    );
+
+    if (usuarioAtualizado.rows.length === 0) {
+      return res.status(404).json({ erro: 'Usuário não encontrado.' });
+    }
+
+    res.json({
+      mensagem: 'Perfil atualizado com sucesso.',
+      usuario: usuarioAtualizado.rows[0]
+    });
+  } catch (error) {
+    console.error('Erro ao atualizar perfil:', error);
+    res.status(500).json({ erro: 'Erro interno ao atualizar perfil.' });
+  }
+});
+
+// Alterar Senha - Autenticado
+app.put('/api/usuarios/senha', autenticarToken, async (req, res) => {
+  const { senhaAtual, novaSenha } = req.body;
+
+  if (!senhaAtual || !novaSenha) {
+    return res.status(400).json({ erro: 'Senha atual e nova senha são obrigatórias.' });
+  }
+
+  if (novaSenha.length < 6) {
+    return res.status(400).json({ erro: 'A nova senha deve ter no mínimo 6 caracteres.' });
+  }
+
+  try {
+    const usuarioResult = await pool.query('SELECT senha_hash FROM usuarios WHERE id = $1', [req.usuario.id]);
+    if (usuarioResult.rows.length === 0) {
+      return res.status(404).json({ erro: 'Usuário não encontrado.' });
+    }
+
+    const usuario = usuarioResult.rows[0];
+    const senhaValida = await bcrypt.compare(senhaAtual, usuario.senha_hash);
+
+    if (!senhaValida) {
+      return res.status(401).json({ erro: 'Senha atual incorreta.' });
+    }
+
+    const saltRounds = 10;
+    const novoHash = await bcrypt.hash(novaSenha, saltRounds);
+
+    await pool.query('UPDATE usuarios SET senha_hash = $1 WHERE id = $2', [novoHash, req.usuario.id]);
+
+    res.json({ mensagem: 'Senha alterada com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao alterar senha:', error);
+    res.status(500).json({ erro: 'Erro interno ao alterar senha.' });
+  }
+});
+
+// Excluir Conta - Autenticado (Com confirmação de senha)
+app.delete('/api/usuarios/conta', autenticarToken, async (req, res) => {
+  const { senha } = req.body;
+
+  if (!senha) {
+    return res.status(400).json({ erro: 'Informe sua senha para confirmar a exclusão da conta.' });
+  }
+
+  try {
+    const usuarioResult = await pool.query('SELECT senha_hash FROM usuarios WHERE id = $1', [req.usuario.id]);
+    if (usuarioResult.rows.length === 0) {
+      return res.status(404).json({ erro: 'Usuário não encontrado.' });
+    }
+
+    const usuario = usuarioResult.rows[0];
+    const senhaValida = await bcrypt.compare(senha, usuario.senha_hash);
+
+    if (!senhaValida) {
+      return res.status(401).json({ erro: 'Senha incorreta. A conta não foi excluída.' });
+    }
+
+    // Graças ao ON DELETE CASCADE configurado em tarefas(usuario_id), todas as tarefas são removidas automaticamente
+    await pool.query('DELETE FROM usuarios WHERE id = $1', [req.usuario.id]);
+
+    res.json({ mensagem: 'Conta e todos os dados associados foram excluídos com sucesso.' });
+  } catch (error) {
+    console.error('Erro ao excluir conta:', error);
+    res.status(500).json({ erro: 'Erro interno ao excluir conta.' });
+  }
+});
+
+// Recuperar / Redefinir Senha (Esqueci minha senha) - Público
+app.post('/api/recuperar-senha', async (req, res) => {
+  const { email, novaSenha } = req.body;
+
+  if (!email || !novaSenha) {
+    return res.status(400).json({ erro: 'E-mail e nova senha são obrigatórios.' });
+  }
+
+  if (novaSenha.length < 6) {
+    return res.status(400).json({ erro: 'A nova senha deve ter no mínimo 6 caracteres.' });
+  }
+
+  try {
+    const usuarioResult = await pool.query('SELECT id FROM usuarios WHERE email = $1', [email]);
+    if (usuarioResult.rows.length === 0) {
+      return res.status(404).json({ erro: 'Nenhum usuário cadastrado com este e-mail.' });
+    }
+
+    const saltRounds = 10;
+    const novoHash = await bcrypt.hash(novaSenha, saltRounds);
+
+    await pool.query('UPDATE usuarios SET senha_hash = $1 WHERE email = $2', [novoHash, email]);
+
+    res.json({ mensagem: 'Senha redefinida com sucesso! Você já pode entrar com sua nova senha.' });
+  } catch (error) {
+    console.error('Erro ao redefinir senha:', error);
+    res.status(500).json({ erro: 'Erro interno ao redefinir senha.' });
+  }
+});
+
 // --- CRUD DE TAREFAS (Protegido por autenticação) ---
 
 // Listar Tarefas do Usuário (GET /api/tarefas)
