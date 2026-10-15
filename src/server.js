@@ -44,6 +44,7 @@ async function initDb(retries = 5, delay = 2000) {
     ALTER TABLE tarefas ADD COLUMN IF NOT EXISTS usuario_id INTEGER REFERENCES usuarios(id) ON DELETE CASCADE;
     
     ALTER TABLE tarefas ADD COLUMN IF NOT EXISTS data_vencimento TIMESTAMP;
+    ALTER TABLE tarefas ADD COLUMN IF NOT EXISTS tem_horario BOOLEAN DEFAULT FALSE;
   `;
   while (retries > 0) {
     try {
@@ -313,7 +314,7 @@ app.get('/api/tarefas', autenticarToken, async (req, res) => {
 
 // Criar Nova Tarefa (POST /api/tarefas)
 app.post('/api/tarefas', autenticarToken, async (req, res) => {
-  const { titulo, descricao, data_vencimento } = req.body;
+  const { titulo, descricao, data_vencimento, tem_horario } = req.body;
 
   if (!titulo) {
     return res.status(400).json({ erro: 'O título da tarefa é obrigatório.' });
@@ -321,8 +322,8 @@ app.post('/api/tarefas', autenticarToken, async (req, res) => {
 
   try {
     const novaTarefa = await pool.query(
-      'INSERT INTO tarefas (titulo, descricao, data_vencimento, usuario_id) VALUES ($1, $2, $3, $4) RETURNING *',
-      [titulo, descricao || '', data_vencimento || null, req.usuario.id]
+      'INSERT INTO tarefas (titulo, descricao, data_vencimento, tem_horario, usuario_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [titulo, descricao || '', data_vencimento || null, tem_horario === true, req.usuario.id]
     );
     res.status(201).json(novaTarefa.rows[0]);
   } catch (error) {
@@ -334,7 +335,7 @@ app.post('/api/tarefas', autenticarToken, async (req, res) => {
 // Atualizar Tarefa (PUT /api/tarefas/:id)
 app.put('/api/tarefas/:id', autenticarToken, async (req, res) => {
   const { id } = req.params;
-  const { titulo, descricao, concluida, data_vencimento } = req.body;
+  const { titulo, descricao, concluida, data_vencimento, tem_horario } = req.body;
 
   try {
     const tarefaExistente = await pool.query(
@@ -351,10 +352,11 @@ app.put('/api/tarefas/:id', autenticarToken, async (req, res) => {
     const novaDescricao = descricao !== undefined ? descricao : tarefaAtual.descricao;
     const novaConcluida = concluida !== undefined ? concluida : tarefaAtual.concluida;
     const novaDataVencimento = data_vencimento !== undefined ? data_vencimento : tarefaAtual.data_vencimento;
+    const novoTemHorario = tem_horario !== undefined ? tem_horario : (tarefaAtual.tem_horario || false);
 
     const tarefaAtualizada = await pool.query(
-      'UPDATE tarefas SET titulo = $1, descricao = $2, concluida = $3, data_vencimento = $4 WHERE id = $5 AND usuario_id = $6 RETURNING *',
-      [novoTitulo, novaDescricao, novaConcluida, novaDataVencimento, id, req.usuario.id]
+      'UPDATE tarefas SET titulo = $1, descricao = $2, concluida = $3, data_vencimento = $4, tem_horario = $5 WHERE id = $6 AND usuario_id = $7 RETURNING *',
+      [novoTitulo, novaDescricao, novaConcluida, novaDataVencimento, novoTemHorario, id, req.usuario.id]
     );
 
     res.json(tarefaAtualizada.rows[0]);
