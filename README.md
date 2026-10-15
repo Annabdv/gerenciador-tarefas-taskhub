@@ -2,9 +2,13 @@
   <img src="./public/images/node.png.png" alt="Logo NODE" width="300">
 </p>
 
-# NODE — Notes, Organize, Do, Execute
+# taskHub
 
-Aplicação web full-stack desenvolvida com Node.js, PostgreSQL e Tailwind CSS para a Atividade 2 da disciplina, focada no gerenciamento eficiente de tarefas, autenticação segura e esteira automatizada de CI/CD.
+Aplicação web full-stack desenvolvida com Node.js, PostgreSQL e Tailwind CSS, focada no gerenciamento eficiente de tarefas, autenticação segura e esteira automatizada de CI/CD.
+
+> **Identidade Visual:**
+> - **Tipografia:** *Outfit* (marca "taskHub"), *Unbounded* (títulos de destaque) e *Urbanist* (textos simples e interface)
+> - **Paleta de Cores:** Seashell Rosé (`#FAF0EB` - Fundo principal), Card Aveludado Suave (`#FBF4EE`), Rosy Brown (`#BC8F8F`) e Rosa Berry Fechado (`#8A2D52` / `#5A1634`)
 
 ---
 
