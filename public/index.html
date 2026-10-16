@@ -6,6 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>taskHub</title>
+  <link rel="icon" type="image/png" href="images/logo-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -462,7 +463,8 @@
   <!-- MODAL RECUPERAÇÃO DE SENHA -->
   <div id="modal-forgot-password"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm hidden p-4">
-    <div class="bg-brand-card border border-brand-border/80 rounded-3xl p-6 sm:p-8 w-full max-w-md shadow-2xl fade-in">
+    <div class="relative overflow-hidden bg-brand-card border border-brand-border/80 rounded-3xl p-6 sm:p-8 w-full max-w-md shadow-2xl fade-in">
+      <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-primary via-brand-rosy to-brand-accent"></div>
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-bold text-brand-accent flex items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-brand-primary" fill="none" viewBox="0 0 24 24"
@@ -473,7 +475,7 @@
           Recuperar Senha
         </h3>
         <button type="button" onclick="closeForgotPasswordModal()"
-          class="text-gray-400 hover:text-brand-accent text-xl">✕</button>
+          class="text-gray-400 hover:text-brand-accent text-xl cursor-pointer">✕</button>
       </div>
       <p class="text-xs text-gray-600 mb-4">Digite o e-mail da sua conta e defina a nova senha de acesso.</p>
       <form id="form-forgot-password" onsubmit="handleForgotPassword(event)" class="space-y-4">
@@ -496,11 +498,11 @@
         </div>
         <div class="flex justify-end gap-3 pt-2">
           <button type="button" onclick="closeForgotPasswordModal()"
-            class="px-4 py-2.5 rounded-xl border border-brand-border text-gray-700 hover:bg-brand-soft text-sm font-semibold transition-all">
+            class="px-4 py-2.5 rounded-xl border border-brand-border text-gray-700 hover:bg-brand-soft text-sm font-semibold transition-all cursor-pointer">
             Cancelar
           </button>
           <button type="submit" id="btn-forgot-submit"
-            class="px-5 py-2.5 rounded-xl bg-brand-primary hover:bg-brand-hover text-white text-sm font-semibold shadow-md transition-all">
+            class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-primary to-brand-accent hover:from-brand-hover hover:to-brand-accent text-white text-sm font-semibold shadow-md transition-all cursor-pointer">
             Redefinir Senha
           </button>
         </div>
@@ -512,7 +514,8 @@
   <div id="modal-profile"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm hidden p-4">
     <div
-      class="bg-brand-card border border-brand-border/80 rounded-3xl p-6 sm:p-8 w-full max-w-lg shadow-2xl fade-in max-h-[90vh] overflow-y-auto">
+      class="relative overflow-hidden bg-brand-card border border-brand-border/80 rounded-3xl p-6 sm:p-8 w-full max-w-lg shadow-2xl fade-in max-h-[90vh] overflow-y-auto">
+      <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-primary via-brand-rosy to-brand-accent"></div>
       <div class="flex items-center justify-between mb-5">
         <div class="flex items-center gap-3">
           <div
@@ -653,22 +656,8 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
       <!-- Marca / Logo -->
       <a href="#" onclick="handleLogoClick(event)"
-        class="flex items-center gap-2.5 sm:gap-3 group focus:outline-none cursor-pointer" title="Ir para o Início">
-        <div
-          class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-brand-soft border border-brand-border text-brand-primary flex items-center justify-center font-bold text-lg group-hover:scale-105 transition-all shadow-sm">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-brand-primary" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor" stroke-width="2">
-            <!-- Caderno com espiral / clipe -->
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-            <!-- Checkmark / Lápis -->
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 13.5l2 2 4.5-4.5" />
-          </svg>
-        </div>
-        <div>
-          <span
-            class="font-outfit text-base sm:text-xl font-bold text-brand-accent leading-none tracking-tight">taskHub</span>
-        </div>
+        class="flex items-center gap-2 group focus:outline-none cursor-pointer" title="taskHub - Início">
+        <img src="images/logo-taskhub.png" alt="taskHub" class="h-9 sm:h-10 w-auto object-contain transition-transform group-hover:scale-105">
       </a>
 
       <!-- Ações do Header para Visitantes (Público / Apresentação) -->
@@ -788,103 +777,37 @@
           </div>
         </div>
 
-        <!-- Hero Mockup Interativo (Direita) -->
-        <div class="lg:col-span-5">
-          <div class="relative mx-auto max-w-md">
+        <!-- Hero Ilustração Visual (Direita) -->
+        <div class="lg:col-span-5 flex justify-center">
+          <div class="relative w-full max-w-md">
             <!-- Blur decorativo de fundo -->
             <div
               class="absolute -top-4 -left-4 w-72 h-72 bg-brand-primary/20 rounded-full blur-3xl pointer-events-none">
             </div>
             <div
-              class="absolute -bottom-4 -right-4 w-72 h-72 bg-brand-accent/20 rounded-full blur-3xl pointer-events-none">
+              class="absolute -bottom-4 -right-4 w-72 h-72 bg-brand-rosy/25 rounded-full blur-3xl pointer-events-none">
             </div>
 
-            <!-- Card de Pré-visualização -->
+            <!-- Moldura Premium da Ilustração -->
             <div
-              class="relative bg-brand-card border border-brand-border/45 rounded-3xl p-5 sm:p-6 shadow-xl space-y-4 backdrop-blur-sm">
-              <div class="flex items-center justify-between border-b border-brand-border/60 pb-3">
+              class="relative bg-brand-card border border-brand-border/60 rounded-3xl p-3 sm:p-4 shadow-xl backdrop-blur-sm group overflow-hidden transition-all duration-300 hover:shadow-2xl">
+              <img src="images/hero-illustration.png" alt="Fluxo Inteligente de Tarefas"
+                class="w-full h-auto object-cover rounded-2xl group-hover:scale-[1.02] transition-transform duration-500 shadow-xs">
+
+              <!-- Badge Flutuante Inferior -->
+              <div
+                class="mt-3.5 bg-brand-soft/80 border border-brand-border/70 backdrop-blur-md rounded-2xl p-3 shadow-sm flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
-                  <div class="w-3 h-3 rounded-full bg-rose-400"></div>
-                  <div class="w-3 h-3 rounded-full bg-amber-400"></div>
-                  <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
-                  <span class="text-xs font-bold text-brand-accent ml-2">Painel de Demonstração</span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-brand-primary animate-pulse"></span>
+                  <div>
+                    <p class="text-xs font-bold text-brand-accent">Fluxo de Tarefas Inteligente</p>
+                    <p class="text-[10px] text-gray-600">Prioridades, conexões e clareza diária</p>
+                  </div>
                 </div>
                 <span
-                  class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-brand-soft text-brand-accent">Exemplo
-                  Ativo</span>
-              </div>
-
-              <!-- Mini estatísticas -->
-              <div class="grid grid-cols-3 gap-2">
-                <div class="bg-brand-soft/50 rounded-xl p-2.5 text-center border border-brand-border/40">
-                  <p class="text-[10px] uppercase font-semibold text-gray-500">Total</p>
-                  <p class="text-base font-bold text-brand-accent">3</p>
-                </div>
-                <div class="bg-brand-soft/50 rounded-xl p-2.5 text-center border border-brand-border/40">
-                  <p class="text-[10px] uppercase font-semibold text-gray-500">Pendentes</p>
-                  <p class="text-base font-bold text-brand-primary">2</p>
-                </div>
-                <div class="bg-emerald-50 rounded-xl p-2.5 text-center border border-emerald-200">
-                  <p class="text-[10px] uppercase font-semibold text-emerald-700">Concluídas</p>
-                  <p class="text-base font-bold text-emerald-700">1</p>
-                </div>
-              </div>
-
-              <!-- Tarefas simuladas -->
-              <div class="space-y-2.5">
-                <!-- Tarefa 1 -->
-                <div class="p-3 rounded-xl bg-brand-soft/30 border border-brand-border/50 flex items-start gap-3">
-                  <div
-                    class="w-5 h-5 rounded-md border border-brand-border mt-0.5 flex items-center justify-center bg-brand-card">
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <p class="text-xs font-semibold text-gray-900 truncate">Preparar apresentação do projeto</p>
-                    <p class="text-[10px] text-brand-primary font-medium mt-0.5">📅 Prazo: Hoje às 18:00</p>
-                  </div>
-                  <span
-                    class="text-[10px] px-2 py-0.5 rounded-full bg-brand-soft text-brand-accent font-semibold">Pendente</span>
-                </div>
-
-                <!-- Tarefa 2 (Concluída) -->
-                <div
-                  class="p-3 rounded-xl bg-brand-soft/20 border border-brand-border/30 opacity-75 flex items-start gap-3">
-                  <div
-                    class="w-5 h-5 rounded-md bg-brand-primary border border-brand-primary mt-0.5 flex items-center justify-center text-white">
-                    <svg class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd" />
-                    </svg>
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <p class="text-xs font-semibold text-gray-500 line-through truncate">Revisão de código e testes do
-                      backend</p>
-                    <p class="text-[10px] text-gray-400 mt-0.5">Finalizada com sucesso</p>
-                  </div>
-                  <span
-                    class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-semibold">Concluída</span>
-                </div>
-
-                <!-- Tarefa 3 -->
-                <div class="p-3 rounded-xl bg-brand-soft/30 border border-brand-border/50 flex items-start gap-3">
-                  <div
-                    class="w-5 h-5 rounded-md border border-brand-border mt-0.5 flex items-center justify-center bg-brand-card">
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <p class="text-xs font-semibold text-gray-900 truncate">Deploy com Caddy, Docker e CI/CD</p>
-                    <p class="text-[10px] text-brand-primary font-medium mt-0.5">📅 Prazo: Amanhã às 14:00</p>
-                  </div>
-                  <span
-                    class="text-[10px] px-2 py-0.5 rounded-full bg-brand-soft text-brand-accent font-semibold">Pendente</span>
-                </div>
-              </div>
-
-              <!-- Botão rápido de teste -->
-              <div class="pt-2 text-center">
-                <button type="button" onclick="showAuthView('register')"
-                  class="text-xs font-bold text-brand-primary hover:text-brand-accent transition-colors cursor-pointer">
-                  Experimente agora no seu navegador →
-                </button>
+                  class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-brand-card text-brand-primary border border-brand-border/80 shadow-2xs">
+                  taskHub
+                </span>
               </div>
             </div>
           </div>
@@ -979,42 +902,86 @@
       </div>
     </section>
 
-    <!-- Como Começar (3 passos) -->
-    <section class="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16 w-full">
-      <div class="text-center max-w-xl mx-auto mb-10">
+    <!-- Como Começar (3 passos com Ilustração de Fluxo) -->
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-20 w-full border-t border-brand-border/40">
+      <div class="text-center max-w-xl mx-auto mb-12">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-soft border border-brand-border text-brand-accent text-xs font-semibold shadow-2xs mb-3">
+          <span class="w-2 h-2 rounded-full bg-brand-primary animate-pulse"></span>
+          <span>Processo Ágil & Intuitivo</span>
+        </div>
         <h2 class="font-unbounded text-3xl sm:text-4xl lg:text-5xl font-normal text-brand-accent leading-snug">Como
           Começar
         </h2>
-        <p class="text-sm text-gray-700 mt-2">Três passos simples para assumir o controle do seu dia.</p>
+        <p class="text-sm sm:text-base text-gray-700 mt-2">Três passos simples para assumir o controle do seu dia.</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-        <div class="bg-brand-card border border-brand-border/45 rounded-2xl p-6 shadow-sm">
-          <div
-            class="w-10 h-10 rounded-full bg-brand-primary text-white font-bold flex items-center justify-center mx-auto mb-3 shadow">
-            1
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <!-- Coluna Visual: Ilustração do Fluxo -->
+        <div class="lg:col-span-5 flex justify-center order-2 lg:order-1">
+          <div class="relative w-full max-w-sm">
+            <div class="absolute -top-4 -left-4 w-56 h-56 bg-brand-primary/15 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -bottom-4 -right-4 w-56 h-56 bg-brand-rosy/20 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="relative bg-brand-card border border-brand-border/70 rounded-3xl p-4 shadow-xl backdrop-blur-sm group overflow-hidden transition-all duration-300 hover:shadow-2xl">
+              <img src="images/workflow-steps.png" alt="Fluxo em 3 passos" class="w-full h-auto object-contain rounded-2xl group-hover:scale-105 transition-transform duration-500">
+              <div class="mt-3 text-center">
+                <span class="inline-block text-[11px] font-bold text-brand-primary uppercase tracking-wider bg-brand-soft px-3 py-1 rounded-full border border-brand-border/60">
+                  ✦ Da Ideia à Conclusão
+                </span>
+              </div>
+            </div>
           </div>
-          <h4 class="font-bold text-brand-accent text-sm mb-1">Crie sua Conta</h4>
-          <p class="text-xs text-gray-600">Cadastre-se rapidamente com seu nome e e-mail. Leva menos de 30 segundos.</p>
         </div>
 
-        <div class="bg-brand-card border border-brand-border/45 rounded-2xl p-6 shadow-sm">
-          <div
-            class="w-10 h-10 rounded-full bg-brand-primary text-white font-bold flex items-center justify-center mx-auto mb-3 shadow">
-            2
+        <!-- Coluna de Passos (Cards Conectados) -->
+        <div class="lg:col-span-7 space-y-4 order-1 lg:order-2">
+          <!-- Passo 1 -->
+          <div class="relative bg-brand-card border border-brand-border/60 hover:border-brand-primary/50 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-md transition-all flex items-start gap-4 group">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-primary to-brand-accent text-white font-extrabold text-lg flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 transition-transform">
+              1
+            </div>
+            <div>
+              <h4 class="font-bold text-brand-accent text-base mb-1 flex items-center gap-2">
+                <span>Crie sua Conta</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-soft text-brand-primary border border-brand-border/60">Rápido</span>
+              </h4>
+              <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                Cadastre-se rapidamente com seu nome e e-mail. Leva menos de 30 segundos e seus dados contam com proteção criptografada.
+              </p>
+            </div>
           </div>
-          <h4 class="font-bold text-brand-accent text-sm mb-1">Cadastre Suas Tarefas</h4>
-          <p class="text-xs text-gray-600">Insira prazos, detalhes e categorize suas pendências por ordem de relevância.
-          </p>
-        </div>
 
-        <div class="bg-brand-card border border-brand-border/45 rounded-2xl p-6 shadow-sm">
-          <div
-            class="w-10 h-10 rounded-full bg-brand-primary text-white font-bold flex items-center justify-center mx-auto mb-3 shadow">
-            3
+          <!-- Passo 2 -->
+          <div class="relative bg-brand-card border border-brand-border/60 hover:border-brand-primary/50 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-md transition-all flex items-start gap-4 group">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-primary to-brand-accent text-white font-extrabold text-lg flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 transition-transform">
+              2
+            </div>
+            <div>
+              <h4 class="font-bold text-brand-accent text-base mb-1 flex items-center gap-2">
+                <span>Cadastre Suas Tarefas</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-soft text-brand-primary border border-brand-border/60">Flexível</span>
+              </h4>
+              <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                Insira prazos, horários, descrições ricas e categorize suas pendências. Visualize em lista ágil ou grade mensal.
+              </p>
+            </div>
           </div>
-          <h4 class="font-bold text-brand-accent text-sm mb-1">Execute & Comemore</h4>
-          <p class="text-xs text-gray-600">Acompanhe seu progresso e marque cada meta como concluída com satisfação.</p>
+
+          <!-- Passo 3 -->
+          <div class="relative bg-brand-card border border-brand-border/60 hover:border-brand-primary/50 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-md transition-all flex items-start gap-4 group">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-primary to-brand-accent text-white font-extrabold text-lg flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 transition-transform">
+              3
+            </div>
+            <div>
+              <h4 class="font-bold text-brand-accent text-base mb-1 flex items-center gap-2">
+                <span>Execute & Comemore</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">Produtividade</span>
+              </h4>
+              <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                Acompanhe suas métricas em tempo real, marque tarefas como concluídas e alcance o equilíbrio na sua rotina.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1028,90 +995,133 @@
     </div>
   </div>
 
-  <!-- AUTH CONTAINER (Login & Cadastro) -->
-  <div id="auth-section" class="hidden flex-1 flex flex-col items-center justify-center p-4 py-8 fade-in">
-    <!-- Botão de Voltar para a Apresentação -->
-    <div class="w-full max-w-md mb-3 flex items-center justify-between">
+  <!-- AUTH CONTAINER (Login & Cadastro com Layout Split no Desktop) -->
+  <div id="auth-section" class="hidden flex-1 flex flex-col justify-center max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-12 w-full fade-in">
+    <!-- Barra Superior: Voltar para a Apresentação -->
+    <div class="w-full mb-6 flex items-center justify-between">
       <button type="button" onclick="showLandingView()"
-        class="inline-flex items-center gap-2 text-xs font-bold text-brand-accent hover:text-brand-primary transition-all group cursor-pointer bg-brand-soft/60 px-3 py-1.5 rounded-xl border border-brand-border">
+        class="inline-flex items-center gap-2 text-xs font-bold text-brand-accent hover:text-brand-primary transition-all group cursor-pointer bg-brand-soft/80 hover:bg-brand-soft px-3.5 py-2 rounded-xl border border-brand-border/80 shadow-2xs">
         <svg xmlns="http://www.w3.org/2000/svg"
-          class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24"
+          class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform text-brand-primary" fill="none" viewBox="0 0 24 24"
           stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
-        Voltar para a apresentação
+        <span>Voltar para a apresentação</span>
       </button>
-      <span class="text-[11px] text-gray-500 font-medium">Acesso Seguro</span>
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-soft/70 border border-brand-border/60 text-[11px] font-bold text-brand-accent shadow-2xs">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>Acesso Seguro & Criptografado</span>
+      </div>
     </div>
 
-    <div class="bg-brand-card border border-brand-border/80 rounded-3xl shadow-xl w-full max-w-md p-8 sm:p-10 fade-in">
-      <div class="text-center mb-8">
-        <div
-          class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-soft border border-brand-border text-brand-accent mb-3 shadow-inner">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-            stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-          </svg>
+    <!-- Layout Dividido (Split) no Desktop -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      <!-- Painel Visual com Ilustração de Segurança (Esquerda em Desktop) -->
+      <div class="lg:col-span-6 hidden lg:flex flex-col justify-center space-y-6">
+        <div class="relative rounded-3xl overflow-hidden border border-brand-border/70 bg-brand-card/90 p-8 shadow-xl backdrop-blur-sm group transition-all duration-300 hover:shadow-2xl">
+          <div class="absolute -top-12 -left-12 w-56 h-56 bg-brand-primary/15 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="absolute -bottom-12 -right-12 w-56 h-56 bg-brand-rosy/25 rounded-full blur-3xl pointer-events-none"></div>
+
+          <img src="images/auth-illustration.png" alt="Segurança e Gestão de Tarefas"
+            class="w-full max-h-[350px] object-contain rounded-2xl mx-auto group-hover:scale-[1.02] transition-transform duration-500 drop-shadow-sm">
+
+          <div class="mt-6 text-center space-y-2">
+            <h3 class="font-unbounded text-xl font-semibold text-brand-accent">
+              Sua rotina organizada e protegida
+            </h3>
+            <p class="text-xs text-gray-600 leading-relaxed max-w-md mx-auto">
+              Acesse suas metas diárias, defina lembretes com hora e mantenha seus dados salvos em um ambiente com privacidade absoluta.
+            </p>
+          </div>
+
+          <!-- Badges de Confiança Técnica -->
+          <div class="mt-6 pt-5 border-t border-brand-border/60 grid grid-cols-3 gap-3 text-center">
+            <div class="p-3 rounded-2xl bg-brand-soft/70 border border-brand-border/60">
+              <p class="text-xs font-bold text-brand-primary">JWT Token</p>
+              <p class="text-[10px] text-gray-600 mt-0.5 font-medium">Sessão Segura</p>
+            </div>
+            <div class="p-3 rounded-2xl bg-brand-soft/70 border border-brand-border/60">
+              <p class="text-xs font-bold text-brand-primary">Bcrypt</p>
+              <p class="text-[10px] text-gray-600 mt-0.5 font-medium">Senhas Blindadas</p>
+            </div>
+            <div class="p-3 rounded-2xl bg-brand-soft/70 border border-brand-border/60">
+              <p class="text-xs font-bold text-brand-primary">PostgreSQL</p>
+              <p class="text-[10px] text-gray-600 mt-0.5 font-medium">Dados Persistentes</p>
+            </div>
+          </div>
         </div>
-        <h2 class="font-outfit text-2xl sm:text-3xl font-bold text-brand-accent tracking-tight">taskHub</h2>
       </div>
 
-      <div class="flex rounded-xl bg-brand-soft p-1 mb-6">
-        <button id="tab-login" onclick="switchAuthTab('login')"
-          class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 bg-brand-card text-brand-accent shadow-sm">
-          Entrar
-        </button>
-        <button id="tab-register" onclick="switchAuthTab('register')"
-          class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 text-gray-600 hover:text-brand-accent">
-          Cadastrar
-        </button>
+      <!-- Card de Autenticação: Login & Cadastro (Direita no Desktop / Centralizado no Mobile) -->
+      <div class="lg:col-span-6 flex justify-center lg:justify-end w-full">
+        <div class="bg-brand-card border border-brand-border/80 rounded-3xl shadow-xl w-full max-w-md p-8 sm:p-10 relative overflow-hidden fade-in">
+          <!-- Linha superior em degradê -->
+          <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-brand-primary via-brand-rosy to-brand-accent"></div>
+
+          <!-- Cabeçalho do Card com Logo Oficial -->
+          <div class="text-center mb-6">
+            <img src="images/logo-icon.png" alt="taskHub" class="w-14 h-14 object-contain mx-auto mb-2 drop-shadow-sm hover:scale-105 transition-transform">
+            <h2 class="font-outfit text-2xl font-bold text-brand-accent tracking-tight">taskHub</h2>
+            <p class="text-xs text-gray-500 mt-1" id="auth-card-subtitle">Entre na sua conta para continuar</p>
+          </div>
+
+          <div class="flex rounded-xl bg-brand-soft p-1 mb-6 border border-brand-border/70">
+            <button id="tab-login" onclick="switchAuthTab('login')"
+              class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 bg-brand-card text-brand-accent shadow-sm cursor-pointer">
+              Entrar
+            </button>
+            <button id="tab-register" onclick="switchAuthTab('register')"
+              class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 text-gray-600 hover:text-brand-accent cursor-pointer">
+              Cadastrar
+            </button>
+          </div>
+
+          <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">E-mail</label>
+              <input type="email" id="login-email" required placeholder="seu@email.com"
+                class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Senha</label>
+              <input type="password" id="login-senha" required placeholder="••••••••"
+                class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
+            </div>
+            <div class="flex justify-end -mt-1">
+              <button type="button" onclick="openForgotPasswordModal()"
+                class="text-xs font-semibold text-brand-primary hover:text-brand-accent hover:underline transition-all cursor-pointer">
+                Esqueci minha senha
+              </button>
+            </div>
+            <button type="submit" id="btn-login-submit"
+              class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-brand-primary to-brand-accent hover:from-brand-hover hover:to-brand-accent text-white font-semibold shadow-md hover:shadow-lg transition-all transform active:scale-[0.99] mt-2 cursor-pointer">
+              Entrar na Conta
+            </button>
+          </form>
+
+          <form id="form-register" onsubmit="handleRegister(event)" class="space-y-4 hidden">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Nome Completo</label>
+              <input type="text" id="reg-nome" required placeholder="Seu nome"
+                class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">E-mail</label>
+              <input type="email" id="reg-email" required placeholder="seu@email.com"
+                class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Senha</label>
+              <input type="password" id="reg-senha" required placeholder="Mínimo 6 caracteres"
+                class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
+            </div>
+            <button type="submit" id="btn-reg-submit"
+              class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-brand-primary to-brand-accent hover:from-brand-hover hover:to-brand-accent text-white font-semibold shadow-md hover:shadow-lg transition-all transform active:scale-[0.99] mt-2 cursor-pointer">
+              Criar Minha Conta
+            </button>
+          </form>
+        </div>
       </div>
-
-      <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">E-mail</label>
-          <input type="email" id="login-email" required placeholder="seu@email.com"
-            class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Senha</label>
-          <input type="password" id="login-senha" required placeholder="••••••••"
-            class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
-        </div>
-        <div class="flex justify-end -mt-1">
-          <button type="button" onclick="openForgotPasswordModal()"
-            class="text-xs font-semibold text-brand-primary hover:text-brand-accent hover:underline transition-all cursor-pointer">
-            Esqueci minha senha
-          </button>
-        </div>
-        <button type="submit" id="btn-login-submit"
-          class="w-full py-3.5 px-4 rounded-xl bg-brand-primary hover:bg-brand-hover text-white font-semibold shadow-md hover:shadow-lg transition-all transform active:scale-[0.99] mt-2 cursor-pointer">
-          Entrar na Conta
-        </button>
-      </form>
-
-      <form id="form-register" onsubmit="handleRegister(event)" class="space-y-4 hidden">
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Nome Completo</label>
-          <input type="text" id="reg-nome" required placeholder="Seu nome"
-            class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">E-mail</label>
-          <input type="email" id="reg-email" required placeholder="seu@email.com"
-            class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">Senha</label>
-          <input type="password" id="reg-senha" required placeholder="Mínimo 6 caracteres"
-            class="w-full px-4 py-3 rounded-xl border border-brand-border bg-brand-soft/30 focus:bg-brand-card focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all text-sm">
-        </div>
-        <button type="submit" id="btn-reg-submit"
-          class="w-full py-3.5 px-4 rounded-xl bg-brand-primary hover:bg-brand-hover text-white font-semibold shadow-md hover:shadow-lg transition-all transform active:scale-[0.99] mt-2 cursor-pointer">
-          Criar Minha Conta
-        </button>
-      </form>
     </div>
   </div>
 
@@ -1173,6 +1183,20 @@
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
+        </div>
+      </div>
+
+      <!-- Barra de Progresso Geral -->
+      <div class="relative overflow-hidden bg-brand-card border border-brand-border/70 rounded-2xl p-4 sm:p-5 shadow-2xs">
+        <div class="flex items-center justify-between text-xs font-bold text-brand-accent mb-2">
+          <span class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Progresso Geral das Tarefas</span>
+          </span>
+          <span id="stat-progress-text" class="text-brand-primary font-extrabold">0 de 0 tarefas concluídas (0%)</span>
+        </div>
+        <div class="w-full h-2.5 bg-brand-soft rounded-full overflow-hidden border border-brand-border/50">
+          <div id="stat-progress-bar" class="h-full bg-gradient-to-r from-brand-primary via-brand-rosy to-emerald-500 rounded-full transition-all duration-500" style="width: 0%"></div>
         </div>
       </div>
 
@@ -1269,15 +1293,11 @@
         <div id="lista-tarefas"></div>
 
         <div id="empty-state" class="hidden text-center py-12">
-          <div
-            class="w-16 h-16 rounded-3xl bg-gradient-to-br from-brand-primary/15 to-brand-accent/10 border border-brand-primary/20 text-brand-primary flex items-center justify-center mx-auto mb-3 shadow-inner">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
+          <div class="relative inline-block mb-3">
+            <img src="images/logo-icon.png" alt="taskHub" class="w-16 h-16 object-contain mx-auto drop-shadow-sm opacity-90 hover:scale-105 transition-transform">
           </div>
-          <h3 class="text-base font-semibold text-brand-accent">Nenhuma tarefa encontrada</h3>
-          <p class="text-sm text-gray-500 mt-1">Você está em dia com suas atividades!</p>
+          <h3 class="text-base font-bold text-brand-accent">Nenhuma tarefa encontrada</h3>
+          <p class="text-xs text-gray-500 mt-1 max-w-xs mx-auto">Você está em dia com suas atividades ou nenhuma tarefa corresponde ao filtro atual.</p>
         </div>
       </div>
 
@@ -1288,8 +1308,10 @@
   <footer id="main-footer"
     class="mt-auto border-t border-brand-border/40 py-6 text-center text-xs text-gray-700 bg-brand-soft/20">
     <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-      <p>© 2026 <span class="font-outfit font-bold text-brand-accent">taskHub</span>. Todos os direitos reservados.
-      </p>
+      <div class="flex items-center gap-2">
+        <img src="images/logo-icon.png" alt="taskHub" class="w-4 h-4 object-contain opacity-80">
+        <p>© 2026 <span class="font-outfit font-bold text-brand-accent">taskHub</span>. Todos os direitos reservados.</p>
+      </div>
       <p class="text-[11px] text-brand-accent/80 font-medium">Organização & Produtividade</p>
     </div>
   </footer>
@@ -1371,17 +1393,20 @@
       const tabRegister = document.getElementById('tab-register');
       const formLogin = document.getElementById('form-login');
       const formRegister = document.getElementById('form-register');
+      const subtitle = document.getElementById('auth-card-subtitle');
 
       if (tab === 'login') {
-        tabLogin.className = 'flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 bg-brand-card text-brand-accent shadow-sm';
-        tabRegister.className = 'flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 text-gray-600 hover:text-brand-accent';
+        tabLogin.className = 'flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 bg-brand-card text-brand-accent shadow-sm cursor-pointer';
+        tabRegister.className = 'flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 text-gray-600 hover:text-brand-accent cursor-pointer';
         formLogin.classList.remove('hidden');
         formRegister.classList.add('hidden');
+        if (subtitle) subtitle.textContent = 'Entre na sua conta para continuar';
       } else {
-        tabRegister.className = 'flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 bg-brand-card text-brand-accent shadow-sm';
-        tabLogin.className = 'flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 text-gray-600 hover:text-brand-accent';
+        tabRegister.className = 'flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 bg-brand-card text-brand-accent shadow-sm cursor-pointer';
+        tabLogin.className = 'flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 text-gray-600 hover:text-brand-accent cursor-pointer';
         formRegister.classList.remove('hidden');
         formLogin.classList.add('hidden');
+        if (subtitle) subtitle.textContent = 'Cadastre-se e assuma o controle do seu dia';
       }
     }
 
@@ -1747,6 +1772,13 @@
       document.getElementById('stat-pendentes').textContent = pendentes;
       document.getElementById('stat-concluidas').textContent = concluidas;
 
+      // Atualiza barra de progresso geral
+      const pct = total > 0 ? Math.round((concluidas / total) * 100) : 0;
+      const progText = document.getElementById('stat-progress-text');
+      const progBar = document.getElementById('stat-progress-bar');
+      if (progText) progText.textContent = `${concluidas} de ${total} tarefas concluídas (${pct}%)`;
+      if (progBar) progBar.style.width = `${pct}%`;
+
       let filtradas = tarefas;
       if (currentFilter === 'pendentes') filtradas = tarefas.filter(t => !t.concluida);
       if (currentFilter === 'concluidas') filtradas = tarefas.filter(t => t.concluida);
@@ -1774,8 +1806,17 @@
       });
 
       let prazoTexto = '';
+      let isAtrasada = false;
+      let isHoje = false;
       if (task.data_vencimento) {
         const d = new Date(task.data_vencimento);
+        const agora = new Date();
+        if (!task.concluida && d < agora) {
+          isAtrasada = true;
+        } else if (!task.concluida && d.toDateString() === agora.toDateString()) {
+          isHoje = true;
+        }
+
         if (task.tem_horario) {
           const dataFormatada = d.toLocaleDateString('pt-BR', {
             day: '2-digit', month: '2-digit', year: 'numeric'
@@ -1793,18 +1834,19 @@
 
       return `
         <div class="group relative flex items-start justify-between gap-4 p-4 rounded-2xl border transition-all duration-200 ${task.concluida
-          ? 'border-l-4 border-l-brand-rosy bg-brand-soft/25 border-brand-border/40 opacity-80'
-          : 'border-l-4 border-l-brand-primary bg-brand-card border-brand-border hover:border-brand-accent hover:shadow-md hover:-translate-y-0.5'
+          ? 'border-l-4 border-l-emerald-600 bg-brand-soft/25 border-brand-border/40 opacity-80'
+          : 'border-l-4 border-l-brand-primary bg-brand-card border-brand-border hover:border-brand-accent/60 hover:shadow-md hover:-translate-y-0.5'
         }">
-          <div class="flex items-start gap-3 flex-1 min-w-0">
+          <div class="flex items-start gap-3.5 flex-1 min-w-0">
+            <!-- Botão Circular Inspirado na Identidade Visual taskHub -->
             <button 
               onclick="toggleTaskStatus(${task.id}, ${task.concluida})" 
               title="${task.concluida ? 'Marcar como pendente' : 'Marcar como concluída'}"
-              class="mt-1 w-6 h-6 rounded-lg border flex items-center justify-center transition-all cursor-pointer ${task.concluida
-          ? 'bg-emerald-600 border-emerald-600 text-white shadow-xs'
-          : 'border-brand-border hover:border-brand-primary bg-brand-card text-transparent hover:text-brand-primary/40 shadow-xs'
+              class="mt-0.5 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all cursor-pointer group-hover:scale-105 shrink-0 ${task.concluida
+          ? 'bg-brand-primary border-brand-primary text-white shadow-xs'
+          : 'border-brand-rosy/80 hover:border-brand-primary bg-brand-card text-transparent hover:text-brand-primary/40 shadow-2xs'
         }">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 stroke-[2.5]" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
               </svg>
             </button>
@@ -1826,13 +1868,25 @@
                 </span>
                 <span class="text-gray-300">•</span>
                 <span class="text-gray-500" title="Data em que a tarefa foi salva no sistema">Cadastrado: ${dataCriacao}</span>
-                ${prazoTexto ? `
+                ${prazoTexto ? (isAtrasada ? `
                   <span class="text-gray-300">•</span>
-                  <span class="inline-flex items-center gap-1 font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-900 border border-amber-200/80 shadow-2xs" title="Prazo final informado">
-                    <span>📅</span>
-                    <span>Prazo: <strong class="font-bold text-amber-950">${prazoTexto}</strong></span>
+                  <span class="inline-flex items-center gap-1 font-bold px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 border border-rose-200 shadow-2xs" title="Prazo vencido">
+                    <span>⚠️</span>
+                    <span>Prazo expirado: <strong class="font-bold text-rose-950">${prazoTexto}</strong></span>
                   </span>
-                ` : ''}
+                ` : isHoje ? `
+                  <span class="text-gray-300">•</span>
+                  <span class="inline-flex items-center gap-1 font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-200 shadow-2xs" title="Vence hoje">
+                    <span>⏰</span>
+                    <span>Vence hoje: <strong class="font-bold text-amber-950">${prazoTexto}</strong></span>
+                  </span>
+                ` : `
+                  <span class="text-gray-300">•</span>
+                  <span class="inline-flex items-center gap-1 font-semibold px-2.5 py-0.5 rounded-full bg-brand-soft/90 text-brand-accent border border-brand-border/80 shadow-2xs" title="Prazo final informado">
+                    <span>📅</span>
+                    <span>Prazo: <strong class="font-bold text-brand-accent">${prazoTexto}</strong></span>
+                  </span>
+                `) : ''}
               </div>
             </div>
           </div>

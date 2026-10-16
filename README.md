@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./public/images/node.png.png" alt="Logo NODE" width="300">
+  <img src="./public/images/logo-taskhub.png" alt="Logo taskHub" width="320">
 </p>
 
 # taskHub
