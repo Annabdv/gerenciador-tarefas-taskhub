@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./public/images/logo-taskhub.png" alt="Logo taskHub" width="320">
+  <img src="./public/images/logo-icon.png" alt="Logo taskHub" width="60">
 </p>
 
 # taskHub
